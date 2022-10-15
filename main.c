@@ -15,6 +15,7 @@
  * KONSTANTY
  */
 #define CASE_CHANGE_NUM             32
+#define LETTER_TO_NUM               97
 
 /**
  * ADV. SETTINGS
@@ -130,7 +131,6 @@ int checkContactPriorityOne(const char *str1, const char *str2)
     else if (was_broke != 1 && str2[j] == '\0')
     {
         found = 1;
-//        break;
     }
     #else
     if (was_broke != 1 && str2[j] == '\0')
@@ -259,17 +259,6 @@ int readContactList(struct contact *contactList)
     return i;
 }
 
-//void readInput(char *userInput)
-//{
-//    // input for t9search
-//    scanf("%s", userInput);
-//    // input has to be 100 or less symbols
-//    if (userInput[MAX_LENGTH] != '\0')
-//    {
-//        error(-1, "Input length is more than MAX_LENGTH");
-//    }
-//}
-
 void toLowerCase(char const *input, char *output)
 {
     int i = 0;
@@ -299,7 +288,7 @@ void transformName(char const *inputName, char *transformedName)
     while (name[i] != '\0')
     {
         if (name[i] >= 97 && name[i] <= 122){
-            transformedName[i] = transformer[name[i]-97];
+            transformedName[i] = transformer[name[i]-LETTER_TO_NUM];
         }
         else
         {
