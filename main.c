@@ -9,8 +9,7 @@
  * CONTACT_LIST_FILE_NAME - Jmeno seznam filu
  */
 #define MAX_LENGTH                  100
-#define CONTACT_LIST_MAX_LENGTH     2
-#define CONTACT_LIST_FILE_NAME      "seznam.txt"
+#define CONTACT_LIST_MAX_LENGTH     100
 
 /**
  * KONSTANTY
@@ -24,7 +23,7 @@
  *
  * NUMBER_OF_ERRORS_IN_INPUT - Kolik maximalně muže byt úseků pro ignorovaní
  */
-//#define CHECK_WITH_ERRORS
+#define CHECK_WITH_ERRORS
 #ifdef CHECK_WITH_ERRORS
     #define NUMBER_OF_ERRORS_IN_INPUT   1
 #endif
@@ -128,7 +127,7 @@ int checkContactPriorityOne(const char *str1, const char *str2)
     {
         found = 0;
     }
-    else if (was_broke != 1)
+    else if (was_broke != 1 && str2[j] == '\0')
     {
         found = 1;
 //        break;
@@ -140,62 +139,6 @@ int checkContactPriorityOne(const char *str1, const char *str2)
     }
     #endif
     return found;
-//    int i = 0;
-//    int j = 0;
-//    #ifdef CHECK_WITH_ERRORS
-//    int errors = 0;                 // Pocet chbnych useku
-//    int errorsStack = 0;            // Pocet znaku mezi dvema spravni znaky
-//    int prev_j = -1;
-//    #endif
-//    while (input[i] != '\0' && inputNum[j] != '\0')
-//    {
-//        if (input[i] != inputNum[j])
-//        {
-//            #ifdef CHECK_WITH_ERRORS
-//            if (i == 0)
-//            {
-//                return 0;
-//            }
-//            if (errors < NUMBER_OF_ERRORS_IN_INPUT)
-//            {
-//                errorsStack++;
-//                j--;
-//            }
-//            else if (errors == NUMBER_OF_ERRORS_IN_INPUT)
-//            {
-//                errorsStack++;
-//                j = prev_j - 1;
-//                errors = 0;
-//            }
-//            else
-//            {
-//                return 0;
-//            }
-//            #else
-//            return 0;
-//            #endif
-//        }
-//        #ifdef CHECK_WITH_ERRORS
-//        else
-//        {
-//            if (errorsStack > 0)
-//            {
-//                errors++;
-//                prev_j = j;
-//                errorsStack = 0;
-//            }
-//        }
-//        #endif
-//        i++;
-//        j++;
-//    }
-//#ifdef CHECK_WITH_ERRORS
-//    if (errorsStack != 0)
-//    {
-//        return 0;
-//    }
-//    #endif
-//    return 1;
 }
 
 int strContainsStr(char const *str1, char const *str2)
@@ -293,17 +236,10 @@ void copyStrToStr(const char *from, char *to)
 
 int readContactList(struct contact *contactList)
 {
-    FILE* in;
     char buffer[MAX_LENGTH + 1];
-    in = fopen(CONTACT_LIST_FILE_NAME, "r");
-    if (in == NULL)
-    {
-        error(1, "File not found");
-    }
-
     int flag = 1;
     int i = 0;
-    while (fgets(buffer, MAX_LENGTH, in) != NULL && i < CONTACT_LIST_MAX_LENGTH)
+    while (fgets(buffer, MAX_LENGTH, stdin) != NULL && i < CONTACT_LIST_MAX_LENGTH)
     {
         if (flag == 1) {
             flag = 2;
@@ -316,19 +252,23 @@ int readContactList(struct contact *contactList)
             i++;
         }
     }
+    if (fgets(buffer, MAX_LENGTH, stdin) != NULL)
+    {
+        error(-1, "Wrong length of line of seznam file");
+    }
     return i;
 }
 
-void readInput(char *userInput)
-{
-    // input for t9search
-    scanf("%s", userInput);
-    // input has to be 100 or less symbols
-    if (userInput[MAX_LENGTH] != '\0')
-    {
-        error(-1, "Input length is more than MAX_LENGTH");
-    }
-}
+//void readInput(char *userInput)
+//{
+//    // input for t9search
+//    scanf("%s", userInput);
+//    // input has to be 100 or less symbols
+//    if (userInput[MAX_LENGTH] != '\0')
+//    {
+//        error(-1, "Input length is more than MAX_LENGTH");
+//    }
+//}
 
 void toLowerCase(char const *input, char *output)
 {
@@ -424,25 +364,38 @@ void containsInput(struct contact *contactList, char *inputNum, int *output, int
     }
 }
 
-int main() {
-    while (1 == 1){
-        char userInput[MAX_LENGTH + 1];
-        userInput[MAX_LENGTH] = '\0';
-        int outList[CONTACT_LIST_MAX_LENGTH];
-        int found = 0;
-        struct contact contactList[CONTACT_LIST_MAX_LENGTH];
-        struct contact contactListTransformed[CONTACT_LIST_MAX_LENGTH];
-        readInput(userInput);
-        int contactListLen = readContactList(contactList);
-        transformContactList(contactList, contactListTransformed, contactListLen);
-        getAllPriorityOne(contactListTransformed, userInput, outList, &found);
-        printf("%d\n", found);
-        containsInput(contactListTransformed, userInput, outList, &found, contactListLen);
-        printf("%d\n", found);
+int main(int argc, char *argv[]) {
+    char userInput[MAX_LENGTH + 1];
+    if (argc > 2)
+    {
+        error(-1, "Too many arguments, program need only one additional argument");
+    }
+    int outList[CONTACT_LIST_MAX_LENGTH];
+    int found = 0;
+    struct contact contactList[CONTACT_LIST_MAX_LENGTH];
+    struct contact contactListTransformed[CONTACT_LIST_MAX_LENGTH];
+    int contactListLen = readContactList(contactList);
+    if (argc < 2)
+    {
+        for (int i = 0; i < contactListLen; i++)
+        {
+            printf("%s, %s\n", contactList[i].name, contactList[i].phoneNumber);
+        }
+        return 0;
+    }
+    copyStrToStr(argv[1], userInput);
+    transformContactList(contactList, contactListTransformed, contactListLen);
+    getAllPriorityOne(contactListTransformed, userInput, outList, &found);
+    containsInput(contactListTransformed, userInput, outList, &found, contactListLen);
+    if (found == 0)
+    {
+        printf("Not found");
+    }
+    else
+    {
         for (int i = 0; i < found; i++)
         {
             printf("%s, %s\n", contactList[outList[i]].name, contactList[outList[i]].phoneNumber);
-            printf("%s, %s\n", contactListTransformed[outList[i]].name, contactListTransformed[outList[i]].phoneNumber);
         }
     }
     return 0;
