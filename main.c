@@ -62,7 +62,7 @@ void error(int exitCode, char *desc)
  * @param input - Kontakt pro ověření
  * @param inputNum - Zadané vchodné číslo
  * @return
- * 1 - kontakt stačí\n
+ * 1 - kontakt stačí
  * 0 - kontakt nestačí
  */
 int checkContactPriorityOne(const char *str1, const char *str2)
