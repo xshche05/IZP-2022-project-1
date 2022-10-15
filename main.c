@@ -9,7 +9,7 @@
  * CONTACT_LIST_FILE_NAME - Jmeno seznam filu
  */
 #define MAX_LENGTH                  100
-#define CONTACT_LIST_MAX_LENGTH     50
+#define CONTACT_LIST_MAX_LENGTH     2
 #define CONTACT_LIST_FILE_NAME      "seznam.txt"
 
 /**
@@ -134,7 +134,7 @@ int checkContactPriorityOne(const char *str1, const char *str2)
 //        break;
     }
     #else
-    if (was_broke != 1)
+    if (was_broke != 1 && str2[j] == '\0')
     {
         found = 1;
     }
@@ -232,6 +232,7 @@ int strContainsStr(char const *str1, char const *str2)
                 {
                     errorsStack++;
                     j = prev_j - 1;
+                    j--;
                     errors = 0;
                 }
                 else
@@ -263,17 +264,18 @@ int strContainsStr(char const *str1, char const *str2)
         {
             found = 0;
         }
-        else if (was_broke != 1)
+        else if (was_broke != 1 && str2[j] == '\0')
+        {
+            found = 1;
+            break;
+        }
+        #else
+        if (was_broke != 1 && str2[j] == '\0')
         {
             found = 1;
             break;
         }
         #endif
-        if (was_broke != 1)
-        {
-            found = 1;
-            break;
-        }
     }
     return found;
 }
@@ -289,7 +291,7 @@ void copyStrToStr(const char *from, char *to)
     to[i] = '\0';
 }
 
-void readContactList(struct contact *contactList)
+int readContactList(struct contact *contactList)
 {
     FILE* in;
     char buffer[MAX_LENGTH + 1];
@@ -301,7 +303,7 @@ void readContactList(struct contact *contactList)
 
     int flag = 1;
     int i = 0;
-    while (fgets(buffer, MAX_LENGTH, in) != NULL)
+    while (fgets(buffer, MAX_LENGTH, in) != NULL && i < CONTACT_LIST_MAX_LENGTH)
     {
         if (flag == 1) {
             flag = 2;
@@ -314,6 +316,7 @@ void readContactList(struct contact *contactList)
             i++;
         }
     }
+    return i;
 }
 
 void readInput(char *userInput)
@@ -352,7 +355,7 @@ void transformName(char const *inputName, char *transformedName)
 //    "abcdefghijklmnopqrstuvwxyz"
     int i = 0;
     char name[MAX_LENGTH + 1];
-    toLowerCase(inputName, name);;
+    toLowerCase(inputName, name);
     while (name[i] != '\0')
     {
         if (name[i] >= 97 && name[i] <= 122){
@@ -364,12 +367,13 @@ void transformName(char const *inputName, char *transformedName)
         }
         i++;
     }
+    transformedName[i] = '\0';
 }
 
-void transformContactList(struct contact *input, struct contact *output)
+void transformContactList(struct contact *input, struct contact *output, int contactListLen)
 {
     int i = 0;
-    while (input[i].filled == 1){
+    while (i < contactListLen){
         output[i].filled = 1;
         copyStrToStr(input[i].phoneNumber, output[i].phoneNumber);
         transformName(input[i].name, output[i].name);
@@ -394,11 +398,20 @@ void getAllPriorityOne(struct contact *contactList, char *inputNum, int *output,
     }
 }
 
-void containsInput(struct contact *contactList, char *inputNum, int *output, int *found)
+void containsInput(struct contact *contactList, char *inputNum, int *output, int *found, int contactListLen)
 {
     int i = 0;
-    while (contactList[i].filled > 0) {
-        if (strContainsStr(contactList[i].name, inputNum) == 1)
+    while (i < contactListLen) {
+        if (strContainsStr(contactList[i].phoneNumber, inputNum) == 1)
+        {
+            if (contactList[i].filled == 1)
+            {
+                output[*found] = i;
+                *found = *found + 1;
+                contactList[i].filled = 2;
+            }
+        }
+        else if (strContainsStr(contactList[i].name, inputNum) == 1)
         {
             if (contactList[i].filled == 1)
             {
@@ -414,15 +427,18 @@ void containsInput(struct contact *contactList, char *inputNum, int *output, int
 int main() {
     while (1 == 1){
         char userInput[MAX_LENGTH + 1];
+        userInput[MAX_LENGTH] = '\0';
         int outList[CONTACT_LIST_MAX_LENGTH];
         int found = 0;
         struct contact contactList[CONTACT_LIST_MAX_LENGTH];
         struct contact contactListTransformed[CONTACT_LIST_MAX_LENGTH];
         readInput(userInput);
-        readContactList(contactList);
-        transformContactList(contactList, contactListTransformed);
+        int contactListLen = readContactList(contactList);
+        transformContactList(contactList, contactListTransformed, contactListLen);
         getAllPriorityOne(contactListTransformed, userInput, outList, &found);
-        containsInput(contactListTransformed, userInput, outList, &found);
+        printf("%d\n", found);
+        containsInput(contactListTransformed, userInput, outList, &found, contactListLen);
+        printf("%d\n", found);
         for (int i = 0; i < found; i++)
         {
             printf("%s, %s\n", contactList[outList[i]].name, contactList[outList[i]].phoneNumber);
