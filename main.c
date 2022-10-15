@@ -67,56 +67,60 @@ void error(int exitCode, char *desc)
  */
 int checkContactPriorityOne(const char *str1, const char *str2)
 {
-    int found = 0;
+    int found = 0;                  // Flag jestli bylo najdeno str2 ve str1, 1 - str2 je ve str1, 0 - ne
     int k = 0;
     int i = k;
     int j = 0;
     #ifdef CHECK_WITH_ERRORS
     int errors = 0;                 // Pocet chbnych useku
     int errorsStack = 0;            // Pocet znaku mezi dvema spravni znaky
-    int prev_j = -1;
+    int prev_j = -1;                // Index znáku po 1. chybne mezere
+    int correctInLine = 0;
     #endif
-    int was_broke;
+    int was_broke;                  // Flag který se ukazuje jestli cyklus byl zrušen, -1 - ne byl zrušen, 1 - byl zrušen
     while (str1[i] != '\0' && str2[j] != '\0')
     {
         was_broke = -1;
         if (str1[i] != str2[j])
         {
             #ifdef CHECK_WITH_ERRORS
-            if (i == k)
+            if (i == k)                                   // jestli prvni znaky str1 a str2 se nerovna
             {
                 was_broke = 1;
                 break;
             }
-            if (errors < NUMBER_OF_ERRORS_IN_INPUT)
+            if (errors < NUMBER_OF_ERRORS_IN_INPUT)       // Pocitame cislo chyb v mezere mezi dvema simboly
             {
                 errorsStack++;
+                correctInLine = 0;
                 j--;
             }
-            else if (errors == NUMBER_OF_ERRORS_IN_INPUT)
+            else if (errors == NUMBER_OF_ERRORS_IN_INPUT) // Jestli mame uz jednu chybnu mezeru musime znova zacat hledat znak, ktery byl po prve chybne mezere
             {
                 errorsStack++;
-                j = prev_j - 1;
-                errors = 0;
+                j = prev_j - 1;                           // Index znaky po chybne mezere
+                i = i - correctInLine + 1;
+                errors = 0;                               // Reset pocetu chybnych mezer
             }
-            else
+            else                                          // Jeslti mame jine problemy
             {
                 was_broke = 1;
                 break;
             }
             #else
-            was_broke = 1;
+            was_broke = 1;                                // Rusime cyklus, jeslti mame chybu
             break;
             #endif
         }
         #ifdef CHECK_WITH_ERRORS
         else
         {
-            if (errorsStack > 0)
+            correctInLine++;
+            if (errorsStack > 0)                          // Znaky je spravne a overime jestli oni ma chybnu mezeru mezi sebou
             {
                 errors++;
-                prev_j = j;
-                errorsStack = 0;
+                prev_j = j;                               // Sybmbol po skonceni chybne mezery
+                errorsStack = 0;                          // Reset pocetu chyb v mezere
             }
         }
         #endif
@@ -124,21 +128,21 @@ int checkContactPriorityOne(const char *str1, const char *str2)
         j++;
     }
     #ifdef CHECK_WITH_ERRORS
-    if (errorsStack != 0)
+    if (errorsStack != 0)                                 // Jeslti mame chyby po skonceni cyklusu neni str2 ve str1
     {
-        found = 0;
+        found = 0;                                        // 0 - neni str2 ve str1
     }
-    else if (was_broke != 1 && str2[j] == '\0')
+    else if (was_broke != 1 && str2[j] == '\0')           // Jeslti nemame chyb, nebyl cyklus zrusen a dosli jsme do posledniho znaku str2
     {
-        found = 1;
+        found = 1;                                        // 1 - je str2 ve str1
     }
     #else
-    if (was_broke != 1 && str2[j] == '\0')
+    if (was_broke != 1 && str2[j] == '\0')                // Jeslti nebyl cyklus zrusen a dosli jsme do posledniho znaku str2
     {
-        found = 1;
+        found = 1;                                        // 1 - je str2 ve str1
     }
     #endif
-    return found;
+    return found;                                         // Vratime jestli je str2 ve str1
 }
 
 int strContainsStr(char const *str1, char const *str2)
@@ -146,36 +150,38 @@ int strContainsStr(char const *str1, char const *str2)
     int found;
     for (int k = 0; str1[k] != '\0'; k++)
     {
-        found = 0;
+        found = 0;                      // Flag jestli bylo najdeno str2 ve str1, 1 - str2 je ve str1, 0 - ne
         int i = k;
         int j = 0;
         #ifdef CHECK_WITH_ERRORS
         int errors = 0;                 // Pocet chbnych useku
         int errorsStack = 0;            // Pocet znaku mezi dvema spravni znaky
-        int prev_j = -1;
+        int prev_j = -1;                // Index znáku po 1. chybne mezere
+        int correctInLine = 0;
         #endif
-        int was_broke;
+        int was_broke;                  // Flag který se ukazuje jestli cyklus byl zrušen, -1 - ne byl zrušen, 1 - byl zrušen
         while (str1[i] != '\0' && str2[j] != '\0')
         {
             was_broke = -1;
             if (str1[i] != str2[j])
             {
                 #ifdef CHECK_WITH_ERRORS
-                if (i == k)
+                if (i == k)                                     // jestli prvni znaky str1* a str2 se nerovna
                 {
                     was_broke = 1;
                     break;
                 }
-                if (errors < NUMBER_OF_ERRORS_IN_INPUT)
+                if (errors < NUMBER_OF_ERRORS_IN_INPUT)         // Pocitame cislo chyb v mezere mezi dvema simboly
                 {
                     errorsStack++;
+                    correctInLine = 0;
                     j--;
                 }
-                else if (errors == NUMBER_OF_ERRORS_IN_INPUT)
+                else if (errors == NUMBER_OF_ERRORS_IN_INPUT)   // Jestli mame uz jednu chybnu mezeru musime znova zacat hledat znak, ktery byl po prve chybne mezere
                 {
                     errorsStack++;
                     j = prev_j - 1;
-                    j--;
+                    i = i - correctInLine + 1;
                     errors = 0;
                 }
                 else
@@ -191,6 +197,7 @@ int strContainsStr(char const *str1, char const *str2)
             #ifdef CHECK_WITH_ERRORS
             else
             {
+                correctInLine++;
                 if (errorsStack > 0)
                 {
                     errors++;
