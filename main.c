@@ -59,13 +59,13 @@ void error(int exitCode, char *desc)
 
 /**
  *
- * @param input - Kontakt pro ověření
+ * @param input - String pro ověření
  * @param inputNum - Zadané vchodné číslo
  * @return
  * 1 - kontakt stačí
  * 0 - kontakt nestačí
  */
-int checkContactPriorityOne(const char *str1, const char *str2)
+int checkContactPriorityOne(const char *str1, const char *str2)  // Str1 se musi zacina ze str2
 {
     int found = 0;                  // Flag jestli bylo najdeno str2 ve str1, 1 - str2 je ve str1, 0 - ne
     int k = 0;
@@ -145,39 +145,39 @@ int checkContactPriorityOne(const char *str1, const char *str2)
     return found;                                         // Vratime jestli je str2 ve str1
 }
 
-int strContainsStr(char const *str1, char const *str2)
+int strContainsStr(char const *str1, char const *str2)    // Dela tez same co i checkContactPriorityOne ale str1 musi jen obsahovat str2
 {
     int found;
     for (int k = 0; str1[k] != '\0'; k++)
     {
-        found = 0;                      // Flag jestli bylo najdeno str2 ve str1, 1 - str2 je ve str1, 0 - ne
+        found = 0;
         int i = k;
         int j = 0;
         #ifdef CHECK_WITH_ERRORS
-        int errors = 0;                 // Pocet chbnych useku
-        int errorsStack = 0;            // Pocet znaku mezi dvema spravni znaky
-        int prev_j = -1;                // Index znáku po 1. chybne mezere
+        int errors = 0;
+        int errorsStack = 0;
+        int prev_j = -1;
         int correctInLine = 0;
         #endif
-        int was_broke;                  // Flag který se ukazuje jestli cyklus byl zrušen, -1 - ne byl zrušen, 1 - byl zrušen
+        int was_broke;
         while (str1[i] != '\0' && str2[j] != '\0')
         {
             was_broke = -1;
             if (str1[i] != str2[j])
             {
                 #ifdef CHECK_WITH_ERRORS
-                if (i == k)                                     // jestli prvni znaky str1* a str2 se nerovna
+                if (i == k)
                 {
                     was_broke = 1;
                     break;
                 }
-                if (errors < NUMBER_OF_ERRORS_IN_INPUT)         // Pocitame cislo chyb v mezere mezi dvema simboly
+                if (errors < NUMBER_OF_ERRORS_IN_INPUT)
                 {
                     errorsStack++;
                     correctInLine = 0;
                     j--;
                 }
-                else if (errors == NUMBER_OF_ERRORS_IN_INPUT)   // Jestli mame uz jednu chybnu mezeru musime znova zacat hledat znak, ktery byl po prve chybne mezere
+                else if (errors == NUMBER_OF_ERRORS_IN_INPUT)
                 {
                     errorsStack++;
                     j = prev_j - 1;
@@ -261,7 +261,7 @@ int readContactList(struct contact *contactList)
     }
     if (fgets(buffer, MAX_LENGTH, stdin) != NULL)
     {
-        error(-1, "Wrong length of line of seznam file");
+        error(2, "Wrong length of line in seznam file");
     }
     return i;
 }
@@ -364,7 +364,7 @@ int main(int argc, char *argv[]) {
     char userInput[MAX_LENGTH + 1];
     if (argc > 2)
     {
-        error(-1, "Too many arguments, program need only one additional argument");
+        error(1, "Too many arguments, program need only one additional argument");
     }
     int outList[CONTACT_LIST_MAX_LENGTH];
     int found = 0;
