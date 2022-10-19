@@ -15,6 +15,10 @@
 #define ERROR_MESSAGE_COLOR     "\x1b[31m"               // Barva chyboveho hlaseni
 #define COLOR_RESET             "\x1b[0m"                // Reset barvy
 
+char const transformer[27] = "22233344455566677778889999";    // Transformacni pole
+// "22233344455566677778889999"
+// "abcdefghijklmnopqrstuvwxyz"
+
 /**
  * @brief Struktura pro uchovani kontaktu
  *
@@ -214,17 +218,14 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
 // convert letters to t9 type numbers
 int transformElement(char const *inputStr, char *transformedStr)     // Funkce pro prevod jmena na format pro hledani
 {
-    char transformer[27] = "22233344455566677778889999";                        // Transformacni pole
-    //    "22233344455566677778889999"
-    //    "abcdefghijklmnopqrstuvwxyz"
     char lowerCaseStr[MAX_LENGTH + 1];
     toLowerCase(inputStr, lowerCaseStr);                                   // Prevod jmena na mala pismena
     int i = 0;
     while (lowerCaseStr[i] != '\0')
     {
-        if (lowerCaseStr[i] >= 'a' && lowerCaseStr[i] <= 'z')
-        {                                  // Pokud je znak pismeno
-            transformedStr[i] = transformer[lowerCaseStr[i] - LETTER_TO_NUM];            // Prevod pismena na cislo
+        if (lowerCaseStr[i] >= 'a' && lowerCaseStr[i] <= 'z')       // Pokud je znak pismeno
+        {
+            transformedStr[i] = transformer[lowerCaseStr[i] - LETTER_TO_NUM];            // Prevod pismena na cislo ('a' - LETTER_TO_NUM = 0; transformedStr[0] = '2')
         }
         else if (lowerCaseStr[i] < 0)
         {
