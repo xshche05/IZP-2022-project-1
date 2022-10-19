@@ -102,87 +102,8 @@ int strHasChar(char const *str, char const c, int max_length)
     return 0;
 }
 
-/**
- *
- * @param input - String pro ověření
- * @param inputNum - Zadané vchodné číslo
- * @return
- * 1 - kontakt stačí
- * 0 - kontakt nestačí
- */
-int checkContactPriorityOne(const char *toCheck, const char *toFind)     // Str1 se musi zacina ze toFind (obsahuje 3. funkcionalitu)
-{
-    int found = 0;                  // Flag jestli bylo najdeno toFind ve toCheck, 1 - toFind je ve toCheck, 0 - ne
-    int k = 0;                      // Zacatek stringu
-    int i = k;
-    int j = 0;
-    int errors = 0;                 // Pocet chbnych useku
-    int errorsStack = 0;            // Pocet znaku mezi dvema spravni znaky
-    int prev_j = -1;                // Index znáku po 1. chybne mezere
-    int correctInLine = 0;          // Pocet spravnych znaku v radku
-    int was_broke;                  // Flag který se ukazuje jestli cyklus byl zrušen, -1 - ne byl zrušen, 1 - byl zrušen
-    while (toCheck[i] != '\0' && toFind[j] != '\0')
-    {
-        was_broke = -1;
-        if (toCheck[i] != toFind[j])
-        {
-            if (i == k)                                   // jestli prvni znaky toCheck a toFind se nerovna
-            {
-                was_broke = 1;
-                break;
-            }
-            if (errors < NUMBER_OF_ERRORS_IN_INPUT)       // Pocitame cislo chyb v mezere mezi dvema simboly
-            {
-                errorsStack++;
-                correctInLine = 0;
-                j--;
-            }
-            else if (errors == NUMBER_OF_ERRORS_IN_INPUT) // Jestli mame uz jednu chybnu mezeru musime znova zacat hledat znak, ktery byl po prve chybne mezere
-            {
-                errorsStack++;
-                j = prev_j - 1;                           // Index znaky po chybne mezere
-                i = i - correctInLine + 1;
-                errors = 0;                               // Reset pocetu chybnych mezer
-            }
-            else                                          // Jeslti mame jine problemy
-            {
-                was_broke = 1;
-                break;
-            }
-        }
-        else
-        {
-            correctInLine++;
-            if (errorsStack > 0)                          // Znaky je spravne a overime jestli oni ma chybnu mezeru mezi sebou
-            {
-                errors++;
-                prev_j = j;                               // Sybmbol po skonceni chybne mezery
-                errorsStack = 0;                          // Reset pocetu chyb v mezere
-            }
-        }
-        i++;
-        j++;
-    }
-    if (errorsStack != 0)                                 // Jeslti mame chyby po skonceni cyklusu neni toFind ve toCheck
-    {
-        found = 0;                                        // 0 - neni toFind ve toCheck
-    }
-    else if (was_broke != 1 && toFind[j] == '\0')           // Jeslti nemame chyb, nebyl cyklus zrusen a dosli jsme do posledniho znaku toFind
-    {
-        found = 1;                                        // 1 - je toFind ve toCheck
-    }
-    return found;                                         // Vratime jestli je toFind ve toCheck
-}
 
-/**
- *
- * @param input - String pro ověření
- * @param inputNum - Zadané vchodné číslo
- * @return
- * 1 - kontakt stačí
- * 0 - kontakt nestačí
- */
-int checkContactPriorityTwo(char const *str1, char const *str2)     // Dela tez same co i checkContactPriorityOne ale str1 musi jen obsahovat str2 (obsahuje 3. funkcionalitu)
+int checkContactContainsInput(char const *str1, char const *str2)     // Dela tez same co i checkContactPriorityOne ale str1 musi jen obsahovat str2 (obsahuje 3. funkcionalitu)
 {
     int found;                          // Flag jestli bylo najdeno str2 ve str1, 1 - str2 je ve str1, 0 - ne
     for (int k = 0; str1[k] != '\0'; k++)
@@ -291,68 +212,63 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
 }
 
 // convert letters to t9 type numbers
-void transformElement(char const *inputName, char *transformedName)     // Funkce pro prevod jmena na format pro hledani
+int transformElement(char const *inputStr, char *transformedStr)     // Funkce pro prevod jmena na format pro hledani
 {
     char transformer[27] = "22233344455566677778889999";                        // Transformacni pole
     //    "22233344455566677778889999"
     //    "abcdefghijklmnopqrstuvwxyz"
-    char name[MAX_LENGTH + 1];
-    toLowerCase(inputName, name);                                   // Prevod jmena na mala pismena
+    char lowerCaseStr[MAX_LENGTH + 1];
+    toLowerCase(inputStr, lowerCaseStr);                                   // Prevod jmena na mala pismena
     int i = 0;
-    while (name[i] != '\0')
+    while (lowerCaseStr[i] != '\0')
     {
-        if (name[i] >= 'a' && name[i] <= 'z')
+        if (lowerCaseStr[i] >= 'a' && lowerCaseStr[i] <= 'z')
         {                                  // Pokud je znak pismeno
-            transformedName[i] = transformer[name[i]-LETTER_TO_NUM];            // Prevod pismena na cislo
+            transformedStr[i] = transformer[lowerCaseStr[i] - LETTER_TO_NUM];            // Prevod pismena na cislo
+        }
+        else if (lowerCaseStr[i] < 0)
+        {
+            return -25;
         }
         else                                                                    // Pokud neni znak pismeno
         {
-            if (name[i] == '+')                                                 // Pokud je znak +
+            if (lowerCaseStr[i] == '+')                                                 // Pokud je znak +
             {
-                transformedName[i] = '0';                                       // Nastavime cislo 0
+                transformedStr[i] = '0';                                       // Nastavime cislo 0
             }
             else                                                                // Pokud neni znak +
             {
-                transformedName[i] = name[i];                                   // Nastavime znak
+                transformedStr[i] = lowerCaseStr[i];                                   // Nastavime znak
             }
         }
         i++;
     }
-    transformedName[i] = '\0';                                                  // Ukonceni retezce
+    transformedStr[i] = '\0';                                                  // Ukonceni retezce
+    return 0;
 }
 
 // converting list to search form
-void transformContactList(struct contact *input, struct contact *output, int contactListLen)    // Funkce pro prevod seznamu kontaktu na format pro hledani
+int transformContactList(struct contact *input, struct contact *output, int contactListLen)    // Funkce pro prevod seznamu kontaktu na format pro hledani
 {
+    int checkflag = 0;
     for (int i = 0; i < contactListLen; i++)
     {
-        transformElement(input[i].name, output[i].name);        // Prevod jmena
-        transformElement(input[i].phoneNumber, output[i].phoneNumber);             // Prevod tel cisla
+        checkflag = transformElement(input[i].name, output[i].name);        // Prevod jmena
+        if (checkflag < 0) return checkflag;
+        checkflag = transformElement(input[i].phoneNumber, output[i].phoneNumber);             // Prevod tel cisla
+        if (checkflag < 0) return checkflag;
         output[i].filled = input[i].filled;                                         // Kopirovani flagu
     }
+    return checkflag;
 }
 
-// get all contacts due 1.
-void getAllPriorityOne(struct contact *contactList, char *inputNum, int *output, int *found, int contactListLen)    // Hledame vsechny kontakty s prioritou 1
-{
-    for (int i = 0; i < contactListLen; i++)
-    {
-        if (contactList[i].filled == 1 && checkContactPriorityOne(contactList[i].phoneNumber, inputNum))
-        {
-            output[*found] = i;             // Ulozime index kontaktu
-            (*found)++;                     // Zvysime pocet nalezenych kontaktu
-            contactList[i].filled = 2;      // Nastavime flag na 2, kontakt uz byl nalezen
-        }
-    }
-}
-
-// get all contacts due 2.
-void getAllPriorityTwo(struct contact *contactList, char *inputNum, int *output, int *found, int contactListLen)    // Hledame vsechny kontakty ktere obsahuji zadane cislo
+// get all contacts that contains Input.
+void checkAllIfContainsInput(struct contact *contactList, char *inputNum, int *output, int *found, int contactListLen)    // Hledame vsechny kontakty ktere obsahuji zadane cislo
 {
     for(int i = 0; i < contactListLen; i++)
     {
-        if (contactList[i].filled == 1 && (checkContactPriorityTwo(contactList[i].phoneNumber, inputNum) == 1
-        || checkContactPriorityTwo(contactList[i].name, inputNum) == 1))
+        if (contactList[i].filled == 1 && (checkContactContainsInput(contactList[i].phoneNumber, inputNum) == 1
+                                           || checkContactContainsInput(contactList[i].name, inputNum) == 1))
         {
             output[*found] = i;             // Ulozime index kontaktu
             (*found)++;                     // Zvysime pocet nalezenych kontaktu
@@ -380,18 +296,12 @@ void printFoundContacts(struct contact *contactList, const int *outList, int fou
 
 int main(int argc, char *argv[]) {
     int checkCode = checkInputArgumentsAmount(argc);
-    if (checkCode < 0)
-    {
-        return error(checkCode, "Input has too many arguments");
-    }
+    if (checkCode < 0) return error(checkCode, "Input has too many arguments");
     char userInput[MAX_LENGTH + 1];                 // Uzivatelsky vstup
     struct contact contactList[CONTACT_LIST_MAX_LENGTH];        // Seznam kontaktu
     int contactListLen = readContactList(contactList);         // Nacteme seznam kontaktu a ulozime pocet nactenych kontaktu
     checkCode = contactListLen;
-    if (checkCode < 0)
-    {
-        return error(checkCode, "Seznam file has a problem");
-    }
+    if (checkCode < 0) return error(checkCode, "Seznam file has a problem");
     if (argc < 2)                                   // Pocet argumentu je mensi nez 2
     {
         for (int i = 0; i < contactListLen; i++)    // Nic ne hledame, vypiseme vsechne kontakty
@@ -401,17 +311,14 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     checkCode = checkContainsOnlyNumbers(argv[1]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
-    if (checkCode < 0)
-    {
-        return error(checkCode, "Input has to contain only numbers");
-    }
+    if (checkCode < 0) return error(checkCode, "Input has to contain only numbers");
     copyStrToStr(argv[1], userInput);               // Zkopirujeme argument do promenne pro uzivatelsky vstup
     struct contact contactListTransformed[contactListLen];    // Seznam kontaktu v transformovanem formatu
     int outList[contactListLen];           // Seznam indexu nalezenych kontaktu
     int found = 0;                                  // Pocet nalezenych kontaktu
-    transformContactList(contactList, contactListTransformed, contactListLen);      // Prevod seznamu kontaktu na format pro hledani
-    getAllPriorityOne(contactListTransformed, userInput, outList, &found, contactListLen);      // Hledame vsechny kontakty s prioritou 1
-    getAllPriorityTwo(contactListTransformed, userInput, outList, &found, contactListLen);      // Hledame vsechny kontakty ktere obsahuji zadane cislo
+    checkCode = transformContactList(contactList, contactListTransformed, contactListLen);     // Prevod seznamu kontaktu na format pro hledani
+    if (checkCode < 0) return error(checkCode, "Data in seznam file has to contain only ASCII characters");
+    checkAllIfContainsInput(contactListTransformed, userInput, outList, &found, contactListLen);      // Hledame vsechny kontakty ktere obsahuji zadane cislo
     printFoundContacts(contactList, outList, found);    // Vypiseme vsechno co jsme nasli
     return 0;
 }

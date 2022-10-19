@@ -6,14 +6,29 @@
 
 1. Input arguments errors codes
 > ***(-11)*** - Input arguments amount error. Application got more than one *additional* argument.
+> 
+> Run app example:
+> ```commandline
+> $ ./t9search INPUT_ARGUMENT <seznam.txt
+> ```
 
 > ***(-12)*** - Input argument content has other symbols besides numbers, input has to contain only numbers (0-9).
-
+***
 2. Seznam file errors codes
-> ***(-21)*** - One of the file's line has more symbols than MAX_LENGTH 
+> ***(-21)*** - One of the file's line has more symbols than [MAX_LENGTH](https://github.com/xshche05/t9search/blob/86833ec2238c6a4bfbcdc602c28300a8449d9402/main.c#L4).
 
-> ***(-22)*** - 
+> ***(-22)*** - Seznam file has more (than [CONTACT_LIST_MAX_LENGTH](https://github.com/xshche05/t9search/blob/86833ec2238c6a4bfbcdc602c28300a8449d9402/main.c#L5)) contacts than program can proceed.
 
-> ***(-23)*** - 
+> ***(-23)*** - Seznam file format error, every contact has to look like **that***, file has to contain even amount of lines.
+>
+> **that***:
+> ```text
+> Petr Dvorak
+> 603123456
+> ```
 
-> ***(-24)*** - 
+
+> ***(-24)*** - Seznam file has empty lines, remove all empty lines.
+
+> ***(-25)*** - Data in seznam file has to contain only [ASCII](https://www.asciitable.com/) characters.
+***
