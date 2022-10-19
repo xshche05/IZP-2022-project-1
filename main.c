@@ -31,7 +31,7 @@ struct contact {
 
 int error(int code, char *desc)
 {
-    fprintf(stderr, "%s(%d) Error: %s!%s", ERROR_MESSAGE_COLOR, code, desc, COLOR_RESET);
+    fprintf(stderr, "%s(%d) Error: %s!%s\n", ERROR_MESSAGE_COLOR, code, desc, COLOR_RESET);
     return code;
 }
 
