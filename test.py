@@ -19,4 +19,4 @@ if __name__ == '__main__':
         test = tests[test_i]
         args = test['args']
         s = " ".join(args)
-        run_test('./t9search', s, stdin[0])
+        run_test('./t9search ', s, stdin[0])
