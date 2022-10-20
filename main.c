@@ -8,12 +8,12 @@
 #define CASE_CHANGE_NUM             32                  // Konstanta pro zmenu velikosti pismen
 #define LETTER_TO_NUM               97                  // Konstanta pro prevod pismen na jich poradi v abecede
 
-// ADV. Settings
-#define NUMBER_OF_ERRORS_IN_INPUT   1               // Pocet chybnych mezer mezi dvema spravnymi znaky
-
 // Konsolove barvy
 #define ERROR_MESSAGE_COLOR     "\x1b[31m"               // Barva chyboveho hlaseni
 #define COLOR_RESET             "\x1b[0m"                // Reset barvy
+
+// ADV. Settings
+int NUMBER_OF_ERRORS_IN_INPUT = 0;               // Pocet chybnych mezer mezi dvema spravnymi znaky
 
 char const transformer[27] = "22233344455566677778889999";    // Transformacni pole
 // "22233344455566677778889999"
@@ -55,9 +55,9 @@ int checkContainsOnlyNumbers(char const *str)
 // check if amount of arguments is correct
 int checkInputArgumentsAmount(int argc)
 {
-    if (argc > 2)                                   // Overime pocet argumentu
+    if (argc > 3)                                   // Overime pocet argumentu
     {
-        return -11;       // Pokud je vice nez 2, tak je to spatny pocet argumentu
+        return -11;       // Pokud je vice nez 3, tak je to spatny pocet argumentu
     }
     return 0;
 }
@@ -72,6 +72,25 @@ void copyStrToStr(const char *from, char *to)
         i++;
     }
     to[i] = '\0';
+}
+
+// str1 equals str2
+int strEquals(const char *str1, const char *str2)
+{
+    int i = 0;
+    while (str1[i] != '\0' && str2[i] != '\0')
+    {
+        if (str1[i] != str2[i])
+        {
+            return 0;
+        }
+        i++;
+    }
+    if (str1[i] == '\0' && str2[i] == '\0')
+    {
+        return 1;
+    }
+    return 0;
 }
 
 // convert uppercase letters to lowercase letters
@@ -296,9 +315,14 @@ void printFoundContacts(struct contact *contactList, const int *outList, int fou
 
 
 int main(int argc, char *argv[]) {
+    int argMove = 0;        // Pocet argumentu, ktere se maji preskocit do user inputu
+    if (strEquals(argv[1], "-s"))       // Pokud je prvni argument -s
+    {
+        NUMBER_OF_ERRORS_IN_INPUT = 1;          // Nastavime pocet moznych chyb v inputu na 1
+        argMove++;                            // Preskocime jeden argument
+    }
     int checkCode = checkInputArgumentsAmount(argc);
     if (checkCode < 0) return error(checkCode, "Input has too many arguments");
-    char userInput[MAX_LENGTH + 1];                 // Uzivatelsky vstup
     struct contact contactList[CONTACT_LIST_MAX_LENGTH];        // Seznam kontaktu
     int contactListLen = readContactList(contactList);         // Nacteme seznam kontaktu a ulozime pocet nactenych kontaktu
     checkCode = contactListLen;
@@ -311,9 +335,10 @@ int main(int argc, char *argv[]) {
         }
         return 0;
     }
-    checkCode = checkContainsOnlyNumbers(argv[1]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
+    checkCode = checkContainsOnlyNumbers(argv[1+argMove]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
     if (checkCode < 0) return error(checkCode, "Input has to contain only numbers");
-    copyStrToStr(argv[1], userInput);               // Zkopirujeme argument do promenne pro uzivatelsky vstup
+    char userInput[MAX_LENGTH + 1];                 // Uzivatelsky vstup
+    copyStrToStr(argv[1+argMove], userInput);               // Zkopirujeme argument do promenne pro uzivatelsky vstup
     struct contact contactListTransformed[contactListLen];    // Seznam kontaktu v transformovanem formatu
     int outList[contactListLen];           // Seznam indexu nalezenych kontaktu
     int found = 0;                                  // Pocet nalezenych kontaktu

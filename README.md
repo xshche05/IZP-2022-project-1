@@ -9,8 +9,10 @@
 > 
 > Run app example:
 > ```commandline
-> $ ./t9search INPUT_ARGUMENT <seznam.txt
+> $ ./t9search <optional_params> <INPUT_ARGUMENT> <seznam.txt
 > ```
+> Optional params:
+> * ***-s*** - program najde i takové kontakty, u který mezi každými dvěma nalezenými znaky může být libovolná posloupnost jiných znaků.
 
 > ***(-12)*** - Input argument content has other symbols besides numbers, input has to contain only numbers (0-9).
 ***
