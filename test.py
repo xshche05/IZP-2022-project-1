@@ -17,4 +17,5 @@ if __name__ == '__main__':
     for test_i in tests:
         test = tests[test_i]
         args = test['args']
-        run_test('./t9search', stdin, args)
+        s = " ".join(args)
+        run_test('./t9search', stdin, s)
