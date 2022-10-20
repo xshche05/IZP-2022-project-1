@@ -8,6 +8,8 @@ with open('tests.json') as f:
 
 def run_test(app_name: str, args: List[str], stdin: str, stdout: str):
     p = run([app_name] + args, input=stdin, encoding='ascii', stdout=PIPE, stderr=PIPE)
+    print(p.stdout)
+    print(stdout)
     if p.stdout == stdout:
         print('PASSED')
 
