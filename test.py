@@ -6,10 +6,10 @@ with open('tests.json') as f:
     data = json.load(f)
 
 
-def run_test(app_name: str, args: List[str], stdin: str):
+def run_test(app_name: str, args: List[str], stdin: str, stdout: str):
     p = run([app_name] + args, input=stdin, encoding='ascii', stdout=PIPE, stderr=PIPE)
-    print(p.stdout)
-    print(p.stderr)
+    if p.stdout == stdout:
+        print('PASSED')
 
 
 if __name__ == '__main__':
@@ -19,5 +19,6 @@ if __name__ == '__main__':
     for test_i in tests:
         test = tests[test_i]
         args = test['args']
+        stdout = test['stdout']
         s = " ".join(args)
-        run_test('./t9search', args, stdin[0])
+        run_test('./t9search', args, stdin[0], stdout[0])
