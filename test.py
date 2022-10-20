@@ -23,4 +23,4 @@ if __name__ == '__main__':
         args = test['args']
         stdout = test['stdout']
         s = " ".join(args)
-        run_test('./t9search', args, stdin[0], stdout[0])
+        run_test('./t9search', args, stdin, stdout)
