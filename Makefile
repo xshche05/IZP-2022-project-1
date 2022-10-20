@@ -1,6 +1,6 @@
 CC=gcc
 
-CFLAGS=-c -Wall -Wextra -Werror
+CFLAGS=-std=c99 -Wall -Wextra -Werror
 
 all: t9search clean
 
