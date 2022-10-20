@@ -8,6 +8,7 @@ with open('tests.json') as f:
 def run_test(app_name: str, args: list[str], stdin: str):
     p = run([app_name] + args, input=stdin, encoding='ascii', stdout=PIPE, stderr=PIPE)
     print(p.stdout)
+    print(p.stderr)
 
 
 if __name__ == '__main__':
