@@ -1,0 +1,31 @@
+{
+  "tests": {
+    "baseTests": {
+      "stdin": [
+        "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120"
+      ],
+      "tests": {
+        "test1": {
+          "args": [""],
+          "stdout": "petr dvorak, 603123456\njana novotna, 777987654\nbedrich smetana ml., 541141120"
+        },
+        "test2": {
+          "args": ["12"],
+          "stdout": "petr dvorak, 603123456\nbedrich smetana ml., 541141120"
+        },
+        "test3": {
+          "args": ["686"],
+          "stdout": "jana novotna, 777987654"
+        },
+        "test4": {
+          "args": ["38"],
+          "stdout": "petr dvorak, 603123456\nbedrich smetana ml., 541141120"
+        },
+        "test5": {
+          "args": ["111"],
+          "stdout": "Not found"
+        }
+      }
+    }
+  }
+}

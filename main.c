@@ -308,7 +308,9 @@ void printFoundContacts(struct contact *contactList, const int *outList, int fou
     {
         for (int i = 0; i < found; i++)             // Vypiseme vsechny nalezeny kontakty
         {
-            printf("%s, %s\n", contactList[outList[i]].name, contactList[outList[i]].phoneNumber);
+            char name[MAX_LENGTH + 1];
+            toLowerCase(contactList[outList[i]].name, name);
+            printf("%s, %s\n", name, contactList[outList[i]].phoneNumber);
         }
     }
 }
@@ -316,11 +318,6 @@ void printFoundContacts(struct contact *contactList, const int *outList, int fou
 
 int main(int argc, char *argv[]) {
     int argMove = 0;        // Pocet argumentu, ktere se maji preskocit do user inputu
-    if (strEquals(argv[1], "-s"))       // Pokud je prvni argument -s
-    {
-        NUMBER_OF_ERRORS_IN_INPUT = 1;          // Nastavime pocet moznych chyb v inputu na 1
-        argMove++;                            // Preskocime jeden argument
-    }
     int checkCode = checkInputArgumentsAmount(argc);
     if (checkCode < 0) return error(checkCode, "Input has too many arguments");
     struct contact contactList[CONTACT_LIST_MAX_LENGTH];        // Seznam kontaktu
@@ -331,9 +328,16 @@ int main(int argc, char *argv[]) {
     {
         for (int i = 0; i < contactListLen; i++)    // Nic ne hledame, vypiseme vsechne kontakty
         {
-            printf("%s, %s\n", contactList[i].name, contactList[i].phoneNumber);
+            char name[MAX_LENGTH + 1];
+            toLowerCase(contactList[i].name, name);
+            printf("%s, %s\n", name, contactList[i].phoneNumber);
         }
         return 0;
+    }
+    if (strEquals(argv[1], "-s"))       // Pokud je prvni argument -s
+    {
+        NUMBER_OF_ERRORS_IN_INPUT = 1;          // Nastavime pocet moznych chyb v inputu na 1
+        argMove++;                            // Preskocime jeden argument
     }
     checkCode = checkContainsOnlyNumbers(argv[1+argMove]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
     if (checkCode < 0) return error(checkCode, "Input has to contain only numbers");
