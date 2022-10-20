@@ -1,18 +1,22 @@
 # T9-Search
 
+### Running application
+
+>
+> How to run an application:
+> ```bash
+> $ ./t9search <optional_params> <INPUT_ARGUMENT> <seznam.txt
+> ```
+> Optional params:
+> * ***-s*** - program najde i takové kontakty, u který mezi každými dvěma nalezenými znaky může být libovolná posloupnost jiných znaků.
+
 ### Errors and codes descriptions
 
 #### Application has two types of errors:
 
 1. Input arguments errors codes
 > ***(-11)*** - Input arguments amount error. Application got more than one *additional* argument.
-> 
-> Run app example:
-> ```commandline
-> $ ./t9search <optional_params> <INPUT_ARGUMENT> <seznam.txt
-> ```
-> Optional params:
-> * ***-s*** - program najde i takové kontakty, u který mezi každými dvěma nalezenými znaky může být libovolná posloupnost jiných znaků.
+
 
 > ***(-12)*** - Input argument content has other symbols besides numbers, input has to contain only numbers (0-9).
 ***
