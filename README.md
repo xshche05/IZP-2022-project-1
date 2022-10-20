@@ -30,5 +30,5 @@
 
 > ***(-24)*** - Seznam file has empty lines, remove all empty lines.
 
-> ***(-25)*** - Data in seznam file has to contain only [ASCII](https://www.asciitable.com/) characters.
+> ***(-25)*** - Data in seznam file has to contain only [ASCII](https://www.asciitable.com/) characters, diacritic isn't allowed.
 ***
