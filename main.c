@@ -308,9 +308,9 @@ void printFoundContacts(struct contact *contactList, const int *outList, int fou
     {
         for (int i = 0; i < found; i++)             // Vypiseme vsechny nalezeny kontakty
         {
-            char name[MAX_LENGTH + 1];
-            toLowerCase(contactList[outList[i]].name, name);
-            printf("%s, %s\n", name, contactList[outList[i]].phoneNumber);
+//            char name[MAX_LENGTH + 1];
+//            toLowerCase(contactList[outList[i]].name, name);
+            printf("%s, %s\n", contactList[outList[i]].name, contactList[outList[i]].phoneNumber);
         }
     }
 }
@@ -328,9 +328,9 @@ int main(int argc, char *argv[]) {
     {
         for (int i = 0; i < contactListLen; i++)    // Nic ne hledame, vypiseme vsechne kontakty
         {
-            char name[MAX_LENGTH + 1];
-            toLowerCase(contactList[i].name, name);
-            printf("%s, %s\n", name, contactList[i].phoneNumber);
+//            char name[MAX_LENGTH + 1];
+//            toLowerCase(contactList[i].name, name);
+            printf("%s, %s\n", contactList[i].name, contactList[i].phoneNumber);
         }
         return 0;
     }
