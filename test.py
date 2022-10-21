@@ -1,5 +1,6 @@
 import json
 from subprocess import CompletedProcess, run, PIPE
+from time import sleep
 from typing import Dict, List, Tuple
 
 with open('tests.json') as f:
@@ -14,6 +15,7 @@ def run_test(app_name: str, args: List[str], stdin: str, stdout: str, code: int)
         print("FAILED")
 
     print(p.stderr)
+    sleep(1)
     print(p.returncode)
 
 
