@@ -21,8 +21,9 @@ if __name__ == '__main__':
     for test_cat in tests:
         cat_tests = tests[test_cat]
         stdin = cat_tests['stdin']
-        for test_i in cat_tests:
-            test = cat_tests[test_i]
+        cat_tests_tests = cat_tests['tests']
+        for test_i in cat_tests_tests:
+            test = cat_tests_tests[test_i]
             args = test['args']
             stdout = test['stdout']
             s = " ".join(args)
