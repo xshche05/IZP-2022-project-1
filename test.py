@@ -1,3 +1,4 @@
+import ctypes
 import json
 from subprocess import CompletedProcess, run, PIPE
 from time import sleep
@@ -15,8 +16,8 @@ def run_test(app_name: str, args: List[str], stdin: str, stdout: str, code: int)
         print("FAILED")
 
     print(p.stderr)
-    sleep(1)
-    print(p.returncode)
+    ret = ctypes.c_int32(p.returncode).value
+    print(ret)
 
 
 if __name__ == '__main__':
