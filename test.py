@@ -13,10 +13,7 @@ def run_test(app_name: str, args: List[str], stdin: str, stdout: str, code: int)
     else:
         print("FAILED")
 
-    if p.returncode == code:
-        print(f'CORRECT exitCode - {code}')
-    else:
-        print(f'INCORRECT exitCode - {p.returncode}, has be - {code}')
+    print(p.returncode)
 
 
 if __name__ == '__main__':
