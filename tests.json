@@ -30,35 +30,53 @@
       "tests": {
         "test1_1": {
           "args": ["2232234"],
-          "stdout": "Not found"
+          "stdout": "Not found",
+          "code": 0
         },
         "test1_2": {
           "args": ["-s", "2232234"],
-          "stdout": "abcxxabdxxabdxxabdg, +420123456789"
+          "stdout": "abcxxabdxxabdxxabdg, +420123456789",
+          "code": 0
         },
         "test2_1": {
           "args": ["223"],
-          "stdout": "abcxxabdxxabdxxabdg, +420123456789"
+          "stdout": "abcxxabdxxabdxxabdg, +420123456789",
+          "code": 0
         },
         "test2_2": {
           "args": ["-s", "223"],
-          "stdout": "abcxxabdxxabdxxabdg, +420123456789"
+          "stdout": "abcxxabdxxabdxxabdg, +420123456789",
+          "code": 0
         },
         "test3_1": {
           "args": ["22224"],
-          "stdout": "Not found"
+          "stdout": "Not found",
+          "code": 0
         },
         "test3_2": {
           "args": ["-s", "22224"],
-          "stdout": "Not found"
+          "stdout": "Not found",
+          "code": 0
         },
         "test4_1": {
           "args": ["2340"],
-          "stdout": "Not found"
+          "stdout": "Not found",
+          "code": 0
         },
         "test4_2": {
           "args": ["-s", "2340"],
-          "stdout": "Not found"
+          "stdout": "Not found",
+          "code": 0
+        }
+      }
+    },
+    "groupErrors1": {
+      "stdin": "fhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",
+      "tests": {
+        "test_not_even_num_lines": {
+          "args": ["1"],
+          "stdout": "",
+          "code": -23
         }
       }
     }

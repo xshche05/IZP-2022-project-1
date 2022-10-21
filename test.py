@@ -6,12 +6,17 @@ with open('tests.json') as f:
     data = json.load(f)
 
 
-def run_test(app_name: str, args: List[str], stdin: str, stdout: str):
+def run_test(app_name: str, args: List[str], stdin: str, stdout: str, code: int):
     p = run([app_name] + args, input=stdin, encoding='ascii', stdout=PIPE, stderr=PIPE)
     if p.stdout.replace("\n", "").lower() == stdout.replace("\n", "").lower():
-        print('PASSED')
+        print(f'PASSED')
     else:
         print("FAILED")
+
+    if p.returncode == code:
+        print(f'CORRECT exitCode - {code}')
+    else:
+        print(f'INCORRECT exitCode - {p.returncode}, has be - {code}')
 
 
 if __name__ == '__main__':
@@ -24,6 +29,7 @@ if __name__ == '__main__':
             test = cat_tests_tests[test_i]
             args = test['args']
             stdout = test['stdout']
+            code = test['code']
             s = " ".join(args)
-            run_test('./t9search', args, stdin, stdout)
+            run_test('./t9search', args, stdin, stdout, code)
 
