@@ -13,6 +13,7 @@ def run_test(app_name: str, args: List[str], stdin: str, stdout: str, code: int)
     else:
         print("FAILED")
 
+    print(p.stderr)
     print(p.returncode)
 
 

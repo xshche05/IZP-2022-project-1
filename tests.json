@@ -82,6 +82,9 @@
           "args": ["1"],
           "stdout": "",
           "code": -23
+        },
+        "test_too_long": {
+
         }
       }
     }
