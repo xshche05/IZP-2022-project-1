@@ -17,7 +17,7 @@ def run_test(app_name: str, args: List[str], stdin: str, stdout: str, code: int)
 
     print(p.stderr)
     ret = ctypes.c_int32(p.returncode).value
-    print(ret)
+    print(256 - ret)
 
 
 if __name__ == '__main__':
