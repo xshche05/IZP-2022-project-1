@@ -12,15 +12,19 @@ def run_test(app_name: str, args: List[str], stdin: str, stdout: str):
     # print(stdout)
     if p.stdout[:-1] == stdout:
         print('PASSED')
+    else:
+        print("FAILED")
 
 
 if __name__ == '__main__':
-    baseTests = data['tests']['baseTests']
-    stdin = baseTests['stdin']
-    tests = baseTests['tests']
-    for test_i in tests:
-        test = tests[test_i]
-        args = test['args']
-        stdout = test['stdout']
-        s = " ".join(args)
-        run_test('./t9search', args, stdin, stdout)
+    tests = data['tests']
+    for test_cat in tests:
+        cat_tests = tests[test_cat]
+        stdin = cat_tests['stdin']
+        for test_i in cat_tests:
+            test = cat_tests[test_i]
+            args = test['args']
+            stdout = test['stdout']
+            s = " ".join(args)
+            run_test('./t9search', args, stdin, stdout)
+
