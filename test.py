@@ -10,7 +10,8 @@ with open('tests.json') as f:
 
 def run_test(app_name: str, args: List[str], stdin: str, stdout: str, code: int):
     p = run([app_name] + args, input=stdin, encoding='ascii', stdout=PIPE, stderr=PIPE)
-    if p.stdout.replace("\n", "").lower() == stdout.replace("\n", "").lower():
+    if p.stdout.lower()[:-1] == stdout.lower():
+        print(f'{p.stdout[:-1]}')
         print(f'PASSED')
     else:
         print("FAILED")
