@@ -214,7 +214,7 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
     int i = 0;                          // Pocitadlo pro pocet nactenych kontaktu
     while (fgets(buffer, MAX_LENGTH + 3, stdin) != NULL && i < CONTACT_LIST_MAX_LENGTH)
     {
-//        replaceChar(buffer, '\n', '\0');    // Nahradime znak '\n' za znak '\0', proto je v seznamu \n je konec radku, ho uz mame
+        replaceChar(buffer, '\n', '\0');    // Nahradime znak '\n' za znak '\0', proto je v seznamu \n je konec radku, ho uz mame
         if (strHasChar(buffer, '\0', MAX_LENGTH + 2) != 1)
             // Overeni jestli je nacteny radek delsi nez MAX_LENGTH, +2 protoze potrebujeme misto pro znak '\n' a '\0',
             // pokud nebude buffer mit '\0', tak radek je delsi
