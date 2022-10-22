@@ -17,20 +17,24 @@ def run_test(app_name: str, args: List[str], stdin: str, stdout: str, code: int)
 
     print(p.stderr)
     ret = ctypes.c_int32(p.returncode).value
-    print(256 - ret)
+    print(ret - 256)
 
 
 if __name__ == '__main__':
-    tests = data['tests']
-    for test_cat in tests:
-        cat_tests = tests[test_cat]
-        stdin = cat_tests['stdin']
-        cat_tests_tests = cat_tests['tests']
-        for test_i in cat_tests_tests:
-            test = cat_tests_tests[test_i]
-            args = test['args']
-            stdout = test['stdout']
-            code = test['code']
-            s = " ".join(args)
-            run_test('./t9search', args, stdin, stdout, code)
+    str = "a"*50
+    print(str)
+    print(len("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
+    # tests = data['tests']
+    # for test_cat in tests:
+    #     cat_tests = tests[test_cat]
+    #     stdin = cat_tests['stdin']
+    #     cat_tests_tests = cat_tests['tests']
+    #     for test_i in cat_tests_tests:
+    #         test = cat_tests_tests[test_i]
+    #         args = test['args']
+    #         stdout = test['stdout']
+    #         code = test['code']
+    #         s = " ".join(args)
+    #         run_test('./t9search', args, stdin, stdout, code)
+
 

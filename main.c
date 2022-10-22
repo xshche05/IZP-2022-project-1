@@ -197,12 +197,12 @@ int checkContactContainsInput(char const *str1, char const *str2)     // Dela te
 // read contact list from stdin
 int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
 {
-    char buffer[MAX_LENGTH + 1];        // Buffer pro nacitani znaku
+    char buffer[MAX_LENGTH + 3];        // Buffer pro nacitani znaku
     int flag = 1;                       // Flag pro overeni jestli je nacteny radek jmene nebo telefonni cislo
     int i = 0;                          // Pocitadlo pro pocet nactenych kontaktu
-    while (fgets(buffer, MAX_LENGTH + 2, stdin) != NULL && i < CONTACT_LIST_MAX_LENGTH)
+    while (fgets(buffer, MAX_LENGTH + 3, stdin) != NULL && i < CONTACT_LIST_MAX_LENGTH)
     {
-        if (strHasChar(buffer, '\0', MAX_LENGTH + 1) != 1)            // Overeni jestli je nacteny radek delsi nez MAX_LENGTH
+        if (strHasChar(buffer, '\0', MAX_LENGTH + 2) != 1)            // Overeni jestli je nacteny radek delsi nez MAX_LENGTH
         {
             return -21;     // Radek je delsi nez MAX_LENGTH
         }
