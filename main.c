@@ -61,12 +61,23 @@ int checkInputArgumentsAmount(int argc)
     }
     return 0;
 }
+// replace char in string to another char
+void replaceChar(char *str, char oldChar, char newChar)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (str[i] == oldChar)
+        {
+            str[i] = newChar;
+        }
+    }
+}
 
-// copy str from source to destination
+// copy str z from do to
 void copyStrToStr(const char *from, char *to)
 {
     int i = 0;
-    while (from[i] != '\0' && from[i] != '\n')
+    while (from[i] != '\0')     // Dokud neni konec radku, tak kopirujeme znaky.
     {
         to[i] = from[i];
         i++;
@@ -74,7 +85,7 @@ void copyStrToStr(const char *from, char *to)
     to[i] = '\0';
 }
 
-// str1 equals str2
+// str1 se rovna str2
 int strEquals(const char *str1, const char *str2)
 {
     int i = 0;
@@ -93,7 +104,7 @@ int strEquals(const char *str1, const char *str2)
     return 0;
 }
 
-// convert uppercase letters to lowercase letters
+// udelame z velkeho pismena malé
 void toLowerCase(char const *input, char *output)
 {
     int i = 0;
@@ -112,7 +123,7 @@ void toLowerCase(char const *input, char *output)
     output[i] = '\0';
 }
 
-// str has char
+// str ma zadany char
 int strHasChar(char const *str, char const c, int max_length)
 {
     for (int i = 0; i < max_length; i++)
@@ -125,8 +136,8 @@ int strHasChar(char const *str, char const c, int max_length)
     return 0;
 }
 
-
-int checkContactContainsInput(char const *str1, char const *str2)     // Dela tez same co i checkContactPriorityOne ale str1 musi jen obsahovat str2 (obsahuje 3. funkcionalitu)
+// str1 musi jen obsahovat str2 (obsahuje 3. funkcionalitu)
+int checkContactContainsInput(char const *str1, char const *str2)
 {
     int found;                          // Flag jestli bylo najdeno str2 ve str1, 1 - str2 je ve str1, 0 - ne
     for (int k = 0; str1[k] != '\0'; k++)
@@ -197,12 +208,16 @@ int checkContactContainsInput(char const *str1, char const *str2)     // Dela te
 // read contact list from stdin
 int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
 {
-    char buffer[MAX_LENGTH + 3];        // Buffer pro nacitani znaku
+    char buffer[MAX_LENGTH + 3];        // Buffer pro nacitani znaku, +3 protoze potrebujeme misto pro znak '\n', '\0'
+    // a znak pro extra kontrolu radku
     int flag = 1;                       // Flag pro overeni jestli je nacteny radek jmene nebo telefonni cislo
     int i = 0;                          // Pocitadlo pro pocet nactenych kontaktu
     while (fgets(buffer, MAX_LENGTH + 3, stdin) != NULL && i < CONTACT_LIST_MAX_LENGTH)
     {
-        if (strHasChar(buffer, '\0', MAX_LENGTH + 2) != 1)            // Overeni jestli je nacteny radek delsi nez MAX_LENGTH
+        replaceChar(buffer, '\n', '\0');    // Nahradime znak '\n' za znak '\0', proto je v seznamu \n je konec radku, ho uz mame
+        if (strHasChar(buffer, '\0', MAX_LENGTH + 2) != 1)
+            // Overeni jestli je nacteny radek delsi nez MAX_LENGTH, +2 protoze potrebujeme misto pro znak '\n' a '\0',
+            // pokud nebude buffer mit '\0', tak radek je delsi
         {
             return -21;     // Radek je delsi nez MAX_LENGTH
         }
@@ -210,60 +225,61 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
         {
             return -24;
         }
-        if (flag == 1)
-        {                                                            // Nacteny radek je jmeno
+        if (flag == 1)  // Nacteny radek je jmeno
+        {
             flag = 2;
             copyStrToStr(buffer, contactList[i].name);
         }
-        else
-        {                                                                      // Nacteny radek je telefonni cislo
+        else      // Nacteny radek je telefonni cislo
+        {
             flag = 1;
             copyStrToStr(buffer, contactList[i].phoneNumber);
-            contactList[i].filled = 1;                                              // Nastavime ze je kontakt plny
+            contactList[i].filled = 1;    // Nastavime ze je kontakt plny
             i++;
         }
     }
-    if (fgets(buffer, MAX_LENGTH, stdin) != NULL)                  // Overime jestli neni jeste neco v stdin
+    if (fgets(buffer, MAX_LENGTH, stdin) != NULL)        // Overime jestli neni jeste neco v stdin
     {
         return -22;        // Pokud ano, tak je to spatny pocet kontaktu v filu
     }
-    if (flag == 2)                                                                  // Jestli flag je 2 tak nacteni bylo ukonceno nactenim jmena
+    if (flag == 2)     // Jestli flag je 2 tak nacteni bylo ukonceno nactenim jmena
     {
         return -23;        // Pokud ano, tak je to spatny pocet radku v filu, musi byt sude
     }
-    return i;                                                                       // Vratime pocet nactenych kontaktu
+    return i;     // Vratime pocet nactenych kontaktu
 }
 
 // convert letters to t9 type numbers
 int transformElement(char const *inputStr, char *transformedStr)     // Funkce pro prevod jmena na format pro hledani
 {
     char lowerCaseStr[MAX_LENGTH + 1];
-    toLowerCase(inputStr, lowerCaseStr);                                   // Prevod jmena na mala pismena
+    toLowerCase(inputStr, lowerCaseStr);  // Prevod jmena na mala pismena
     int i = 0;
     while (lowerCaseStr[i] != '\0')
     {
         if (lowerCaseStr[i] >= 'a' && lowerCaseStr[i] <= 'z')       // Pokud je znak pismeno
         {
-            transformedStr[i] = transformer[lowerCaseStr[i] - LETTER_TO_NUM];            // Prevod pismena na cislo ('a' - LETTER_TO_NUM = 0; transformedStr[0] = '2')
+            // ('a' - LETTER_TO_NUM = 0; transformedStr[0] = '2')
+            transformedStr[i] = transformer[lowerCaseStr[i] - LETTER_TO_NUM];   // Prevod pismena na cislo
         }
         else if (lowerCaseStr[i] < 0)
         {
             return -25;
         }
-        else                                                                    // Pokud neni znak pismeno
+        else  // Pokud neni znak pismeno
         {
-            if (lowerCaseStr[i] == '+')                                                 // Pokud je znak +
+            if (lowerCaseStr[i] == '+')    // Pokud je znak +
             {
-                transformedStr[i] = '0';                                       // Nastavime cislo 0
+                transformedStr[i] = '0';     // Nastavime cislo 0
             }
-            else                                                                // Pokud neni znak +
+            else   // Pokud neni znak +
             {
-                transformedStr[i] = lowerCaseStr[i];                                   // Nastavime znak
+                transformedStr[i] = lowerCaseStr[i];  // Nastavime znak
             }
         }
         i++;
     }
-    transformedStr[i] = '\0';                                                  // Ukonceni retezce
+    transformedStr[i] = '\0';   // Ukonceni retezce
     return 0;
 }
 
@@ -273,11 +289,11 @@ int transformContactList(struct contact *input, struct contact *output, int cont
     int checkflag = 0;
     for (int i = 0; i < contactListLen; i++)
     {
-        checkflag = transformElement(input[i].name, output[i].name);        // Prevod jmena
+        checkflag = transformElement(input[i].name, output[i].name);     // Prevod jmena
         if (checkflag < 0) return checkflag;
-        checkflag = transformElement(input[i].phoneNumber, output[i].phoneNumber);             // Prevod tel cisla
+        checkflag = transformElement(input[i].phoneNumber, output[i].phoneNumber);  // Prevod tel cisla
         if (checkflag < 0) return checkflag;
-        output[i].filled = input[i].filled;                                         // Kopirovani flagu
+        output[i].filled = input[i].filled;   // Kopirovani flagu
     }
     return checkflag;
 }
@@ -290,9 +306,9 @@ void checkAllIfContainsInput(struct contact *contactList, char *inputNum, int *o
         if (contactList[i].filled == 1 && (checkContactContainsInput(contactList[i].phoneNumber, inputNum) == 1
                                            || checkContactContainsInput(contactList[i].name, inputNum) == 1))
         {
-            output[*found] = i;             // Ulozime index kontaktu
-            (*found)++;                     // Zvysime pocet nalezenych kontaktu
-            contactList[i].filled = 2;      // Nastavime flag na 2, kontakt uz byl nalezen
+            output[*found] = i;    // Ulozime index kontaktu
+            (*found)++;      // Zvysime pocet nalezenych kontaktu
+            contactList[i].filled = 2;   // Nastavime flag na 2, kontakt uz byl nalezen
         }
     }
 }
@@ -300,13 +316,13 @@ void checkAllIfContainsInput(struct contact *contactList, char *inputNum, int *o
 // print all found contacts
 void printFoundContacts(struct contact *contactList, const int *outList, int found)
 {
-    if (found == 0)                        // Pokud nebyl nalezen zadny kontakt
+    if (found == 0)    // Pokud nebyl nalezen zadny kontakt
     {
-        printf("Not found\n");               // Vypiseme, ze nebyl nalezen zadny kontakt
+        printf("Not found\n");   // Vypiseme, ze nebyl nalezen zadny kontakt
     }
-    else                                            // Pokud byl nalezen alespon jeden kontakt
+    else    // Pokud byl nalezen alespon jeden kontakt
     {
-        for (int i = 0; i < found; i++)             // Vypiseme vsechny nalezeny kontakty
+        for (int i = 0; i < found; i++)   // Vypiseme vsechny nalezeny kontakty
         {
             printf("%s, %s\n", contactList[outList[i]].name, contactList[outList[i]].phoneNumber);
         }
