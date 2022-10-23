@@ -3,7 +3,7 @@
     "name": "baseTest1",
     "args": [""],
     "test_input": "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120",
-    "expected_output": "Petr Dvorak, 603123456\nJana Novotna, 777987654\nBedrich Smetana ml., 541141120\n0"
+    "expected_output": "Petr Dvorak, 603123456\nJana Novotna, 777987654\nBedrich Smetana ml., 541141120\n"
   },
   {
     "name": "baseTest2",
@@ -28,5 +28,60 @@
     "args": ["111"],
     "test_input": "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120",
     "expected_output": "Not found\n"
+  },
+  {
+    "name": "advTest1",
+    "args": ["2232234"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "Not found\n"
+  },
+  {
+    "name": "advTest2",
+    "args": ["-s", "2232234"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "ABCxxABDxxABDxxABDG, +420123456789\n"
+  },
+  {
+    "name": "advTest3",
+    "args": ["223"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "ABCxxABDxxABDxxABDG, +420123456789\n"
+  },
+  {
+    "name": "advTest4",
+    "args": ["-s", "223"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "ABCxxABDxxABDxxABDG, +420123456789\n"
+  },
+  {
+    "name": "advTest5",
+    "args": ["22224"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "Not found\n"
+  },
+  {
+    "name": "advTest6",
+    "args": ["-s", "22224"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "Not found\n"
+  },
+  {
+    "name": "advTest7",
+    "args": ["2340"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "Not found\n"
+  },
+  {
+    "name": "advTest8",
+    "args": ["-s", "2340"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "Not found\n"
+  },
+  {
+    "name": "inputArgAmount",
+    "args": ["-s", "2340", "extra"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "",
+    "expected_return_code": -11
   }
 ]

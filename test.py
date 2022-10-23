@@ -1,8 +1,10 @@
 import ctypes
+import numpy as np
 import json
 import sys
 from subprocess import CompletedProcess, run, PIPE
 from time import sleep
+import signal
 from typing import Dict, List, Tuple
 
 is_windows = sys.platform.startswith('win')
@@ -39,11 +41,12 @@ class Test:
 
     def check_result(self) -> bool:
         result = self.run()
-        if result.returncode != 0:
-            print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed with return code {result.returncode}{bcolors.ENDC}')
-            print(f'Stderr:\n {bcolors.WARNING}{result.stderr}{bcolors.ENDC}')
+        return_code = np.uint32(result.returncode).view("int32")
+        if return_code != 0:
+            print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed with return code {return_code}{bcolors.ENDC}')
+            print(f'{bcolors.WARNING}Stderr:\n{result.stderr}{bcolors.ENDC}')
             return False
-        elif result.returncode == self.expected_code:
+        elif return_code == self.expected_code:
             if result.stdout == self.expected:
                 print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Passed{bcolors.ENDC}')
                 return True
