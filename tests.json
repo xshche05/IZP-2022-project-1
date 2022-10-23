@@ -3,7 +3,7 @@
     "name": "baseTest1",
     "args": [""],
     "test_input": "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120",
-    "expected_output": "Petr Dvorak, 603123456\nJana Novotna, 777987654\nBedrich Smetana ml., 541141120\n"
+    "expected_output": "Petr Dvorak, 603123456\nJana Novotna, 777987654\nBedrich Smetana ml., 541141120\n0"
   },
   {
     "name": "baseTest2",
