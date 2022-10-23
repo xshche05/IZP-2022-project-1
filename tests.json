@@ -83,5 +83,33 @@
     "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
     "expected_output": "",
     "expected_return_code": -11
+  },
+  {
+    "name": "inputArgHasOnlyNumbers_1",
+    "args": ["-s", "2340y"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "",
+    "expected_return_code": -12
+  },
+  {
+    "name": "inputArgHasOnlyNumbers_2",
+    "args": ["2340y"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "",
+    "expected_return_code": -12
+  },
+  {
+    "name": "CantUseOnly_-s",
+    "args": ["-s"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "",
+    "expected_return_code": -13
+  },
+  {
+    "name": "wrongArgOrder",
+    "args": ["2340y", "-s"],
+    "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
+    "expected_output": "",
+    "expected_return_code": -14
   }
 ]
