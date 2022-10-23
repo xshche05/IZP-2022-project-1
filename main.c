@@ -358,7 +358,7 @@ int main(int argc, char *argv[]) {
             return error(-13, "You cant use -s without <INPUT_ARGUMENT>");
         }
     }
-    if (argc != argMove) return error(-14, "You have wrong order of arguments");
+    if (argc-1 != argMove) return error(-14, "You have wrong order of arguments"); // argc - 1 protoze musime overit kolokost optional argumentu
     checkCode = checkContainsOnlyNumbers(argv[argMove]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
     if (checkCode < 0) return error(checkCode, "Input has to contain only numbers");
     char userInput[MAX_LENGTH + 1];                 // Uzivatelsky vstup
