@@ -5,9 +5,9 @@
 >
 > How to run an application:
 > ```bash
-> $ ./t9search <optional_params> <INPUT_ARGUMENT> <seznam.txt
+> $ ./t9search <-optios> <INPUT_ARGUMENT> <seznam.txt
 > ```
-> Optional params:
+> Options:
 > * ***-s*** - program najde i takové kontakty, u který mezi každými dvěma nalezenými znaky může být libovolná posloupnost jiných znaků.
 
 ### Errors and codes descriptions
@@ -19,6 +19,10 @@
 
 
 > ***(-12)*** - Input argument content has other symbols besides numbers, input has to contain only numbers (0-9).
+
+> ***(-13)*** - You cant use -s without <INPUT_ARGUMENT>.
+
+> ***(-14)*** - You have wrong order of arguments. See [this](#running-application) for more information.
 ***
 2. Seznam file errors codes
 > ***(-21)*** - One of the file's line has more symbols than [MAX_LENGTH](https://github.com/xshche05/t9search/blob/86833ec2238c6a4bfbcdc602c28300a8449d9402/main.c#L4).
@@ -32,7 +36,6 @@
 > Petr Dvorak
 > 603123456
 > ```
-
 
 > ***(-24)*** - Seznam file has empty lines, remove all empty lines.
 

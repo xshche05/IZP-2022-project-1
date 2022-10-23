@@ -7,15 +7,16 @@
 // Kostanty
 #define CASE_CHANGE_NUM             32                  // Konstanta pro zmenu velikosti pismen
 #define LETTER_TO_NUM               97                  // Konstanta pro prevod pismen na jich poradi v abecede
+#define MAX_ARGUMENTS               3                   // Maximalni pocet argumentu
 
 // Konsolove barvy
 #define ERROR_MESSAGE_COLOR     "\x1b[31m"               // Barva chyboveho hlaseni
 #define COLOR_RESET             "\x1b[0m"                // Reset barvy
 
 // ADV. Settings
-int NUMBER_OF_ERRORS_IN_INPUT = 0;               // Pocet chybnych mezer mezi dvema spravnymi znaky
+int NUMBER_OF_ERRORS_IN_INPUT = 0;   // MAX Pocet chybnych mezer mezi dvema spravnymi znaky
 
-char const transformer[27] = "22233344455566677778889999";    // Transformacni pole
+char const transformer[27] = "22233344455566677778889999";    // Transformacni pole, pro prevod pismen na cisla
 // "22233344455566677778889999"
 // "abcdefghijklmnopqrstuvwxyz"
 
@@ -39,7 +40,7 @@ int error(int code, char *desc)
     return code;
 }
 
-// check if str contains only numbers
+// string ma jen cisla
 int checkContainsOnlyNumbers(char const *str)
 {
     for (int i = 0; str[i] != '\0'; i++)
@@ -52,16 +53,17 @@ int checkContainsOnlyNumbers(char const *str)
     return 0;
 }
 
-// check if amount of arguments is correct
+// overit cislo argumentu pri runu appu
 int checkInputArgumentsAmount(int argc)
 {
-    if (argc > 3)                                   // Overime pocet argumentu
+    if (argc > MAX_ARGUMENTS)                                   // Overime pocet argumentu
     {
-        return -11;       // Pokud je vice nez 3, tak je to spatny pocet argumentu
+        return -11;       // Pokud je vice nez 3, tak je to vice nez muze byt MAXIMALNE
     }
     return 0;
 }
-// replace char in string to another char
+
+// zmena char v string na jiny char
 void replaceChar(char *str, char oldChar, char newChar)
 {
     for (int i = 0; str[i] != '\0'; i++)
@@ -73,7 +75,7 @@ void replaceChar(char *str, char oldChar, char newChar)
     }
 }
 
-// copy str z from do to
+// kopie str z from do to
 void copyStrToStr(const char *from, char *to)
 {
     int i = 0;
@@ -124,9 +126,9 @@ void toLowerCase(char const *input, char *output)
 }
 
 // str ma zadany char
-int strHasChar(char const *str, char const c, int max_length)
+int strHasChar(char const *str, char const c, int check_limit)
 {
-    for (int i = 0; i < max_length; i++)
+    for (int i = 0; i < check_limit; i++)
     {
         if (str[i] == c)
         {
@@ -205,10 +207,10 @@ int checkContactContainsInput(char const *str1, char const *str2)
     return found;
 }
 
-// read contact list from stdin
+// nacist pole kontaktu z stdin
 int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
 {
-    char buffer[MAX_LENGTH + 3];        // Buffer pro nacitani znaku, +3 protoze potrebujeme misto pro znak '\n', '\0'
+    char buffer[MAX_LENGTH + 3];        // Buffer pro nacitani znaku, +3 protoze potrebujeme misto pro znak '\n', '\0' a znak pro kontrolu pokud je to vice nez 100
     // a znak pro extra kontrolu radku
     int flag = 1;                       // Flag pro overeni jestli je nacteny radek jmene nebo telefonni cislo
     int i = 0;                          // Pocitadlo pro pocet nactenych kontaktu
@@ -249,7 +251,7 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
     return i;     // Vratime pocet nactenych kontaktu
 }
 
-// convert letters to t9 type numbers
+// zmenenit pismena na t9 cisla
 int transformElement(char const *inputStr, char *transformedStr)     // Funkce pro prevod jmena na format pro hledani
 {
     char lowerCaseStr[MAX_LENGTH + 1];
@@ -283,7 +285,7 @@ int transformElement(char const *inputStr, char *transformedStr)     // Funkce p
     return 0;
 }
 
-// converting list to search form
+// znenit pole kontaktu na pole pro hledani
 int transformContactList(struct contact *input, struct contact *output, int contactListLen)    // Funkce pro prevod seznamu kontaktu na format pro hledani
 {
     int checkflag = 0;
@@ -298,7 +300,7 @@ int transformContactList(struct contact *input, struct contact *output, int cont
     return checkflag;
 }
 
-// get all contacts that contains Input.
+// hledame kontakty
 void checkAllIfContainsInput(struct contact *contactList, char *inputNum, int *output, int *found, int contactListLen)    // Hledame vsechny kontakty ktere obsahuji zadane cislo
 {
     for(int i = 0; i < contactListLen; i++)
@@ -313,7 +315,7 @@ void checkAllIfContainsInput(struct contact *contactList, char *inputNum, int *o
     }
 }
 
-// print all found contacts
+// vypiseme nalezeny kontakty
 void printFoundContacts(struct contact *contactList, const int *outList, int found)
 {
     if (found == 0)    // Pokud nebyl nalezen zadny kontakt
@@ -331,7 +333,7 @@ void printFoundContacts(struct contact *contactList, const int *outList, int fou
 
 
 int main(int argc, char *argv[]) {
-    int argMove = 0;        // Pocet argumentu, ktere se maji preskocit do user inputu
+    int argMove = 1;        // Pocet argumentu, ktere se maji preskocit do user inputu
     int checkCode = checkInputArgumentsAmount(argc);
     if (checkCode < 0) return error(checkCode, "Input has too many arguments");
     struct contact contactList[CONTACT_LIST_MAX_LENGTH];        // Seznam kontaktu
@@ -346,15 +348,21 @@ int main(int argc, char *argv[]) {
         }
         return 0;
     }
-    if (strEquals(argv[1], "-s"))       // Pokud je prvni argument -s
+
+    if (strEquals(argv[argMove], "-s"))       // Pokud je prvni argument -s
     {
         NUMBER_OF_ERRORS_IN_INPUT = 1;          // Nastavime pocet moznych chyb v inputu na 1
         argMove++;                            // Preskocime jeden argument
+        if (argc == argMove)
+        {
+            return error(-13, "You cant use -s without <INPUT_ARGUMENT>");
+        }
     }
-    checkCode = checkContainsOnlyNumbers(argv[1+argMove]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
+    if (argc != argMove) return error(-14, "You have wrong order of arguments");
+    checkCode = checkContainsOnlyNumbers(argv[argMove]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
     if (checkCode < 0) return error(checkCode, "Input has to contain only numbers");
     char userInput[MAX_LENGTH + 1];                 // Uzivatelsky vstup
-    copyStrToStr(argv[1+argMove], userInput);               // Zkopirujeme argument do promenne pro uzivatelsky vstup
+    copyStrToStr(argv[argMove], userInput);               // Zkopirujeme argument do promenne pro uzivatelsky vstup
     struct contact contactListTransformed[contactListLen];    // Seznam kontaktu v transformovanem formatu
     int outList[contactListLen];           // Seznam indexu nalezenych kontaktu
     int found = 0;                                  // Pocet nalezenych kontaktu
