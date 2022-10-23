@@ -40,7 +40,7 @@ class Test:
     def check_result(self) -> bool:
         result = self.run()
         if result.returncode != 0:
-            print(f'{bcolors.FAIL}Test {self.name} failed with return code {result.returncode}{bcolors.ENDC}')
+            print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed with return code {result.returncode}{bcolors.ENDC}')
             print(f'Stderr:\n {bcolors.WARNING}{result.stderr}{bcolors.ENDC}')
             return False
         elif result.returncode == self.expected_code:
@@ -48,14 +48,14 @@ class Test:
                 print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Passed{bcolors.ENDC}')
                 return True
             else:
-                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n {self.expected}\nGot: {result.stdout}{bcolors.ENDC}')
+                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}')
                 return False
         else:
             if result.stdout == self.expected:
                 print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Passed{bcolors.ENDC}')
                 return True
             else:
-                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n {self.expected}\nGot: {result.stdout}{bcolors.ENDC}')
+                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}')
                 return False
 
 
