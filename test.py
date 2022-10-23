@@ -45,19 +45,17 @@ class Test:
             return False
         elif result.returncode == self.expected_code:
             if result.stdout == self.expected:
-                print(f'{bcolors.OKGREEN}Test {self.name} passed{bcolors.ENDC}')
+                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Passed{bcolors.ENDC}')
                 return True
             else:
-                print(f'{bcolors.FAIL}Test {self.name} failed, expected output {self.expected}, got {result.stdout}{bcolors.ENDC}')
+                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n {self.expected}\nGot: {result.stdout}{bcolors.ENDC}')
                 return False
         else:
             if result.stdout == self.expected:
-                print(f'{bcolors.OKGREEN}Test {self.name} passed{bcolors.ENDC}')
+                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Passed{bcolors.ENDC}')
                 return True
             else:
-                print(f'{bcolors.FAIL}Test {self.name} failed{bcolors.ENDC}')
-                print(f'Expected:\n {bcolors.WARNING}{self.expected}{bcolors.ENDC}')
-                print(f'Got:\n {bcolors.WARNING}{result.stdout}{bcolors.ENDC}')
+                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n {self.expected}\nGot: {result.stdout}{bcolors.ENDC}')
                 return False
 
 
