@@ -10,6 +10,15 @@
 > Options:
 > * ***-s*** - program najde i takové kontakty, u který mezi každými dvěma nalezenými znaky může být libovolná posloupnost jiných znaků.
 
+### Basic Testing
+
+>
+> How to test an application:
+> ```bash
+> $ python3 ./test.py t9search
+> ```
+> Test some output and errors.
+
 ### Errors and codes descriptions
 
 #### Application has two types of errors:
