@@ -224,7 +224,7 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
         {
             return -21;     // Radek je delsi nez MAX_LENGTH
         }
-        if (buffer[0] == '\n')
+        if (buffer[0] == '\0')
         {
             return -24;
         }

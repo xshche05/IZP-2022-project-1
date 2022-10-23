@@ -111,5 +111,58 @@
     "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
     "expected_output": "",
     "expected_return_code": -14
+  },
+  {
+    "name": "lineSymLimitNoErr",
+    "args": ["2"],
+    "test_input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n+420123456789",
+    "expected_output": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, +420123456789\n"
+  },
+  {
+    "name": "lineSymLimitErr",
+    "args": ["2"],
+    "test_input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n+420123456789",
+    "expected_output": "",
+    "expected_return_code": -21
+  },
+  {
+    "name": "listLimitNoErr",
+    "args": ["3"],
+    "test_input": "d\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21",
+    "expected_output": "d, 21\n"
+  },
+  {
+    "name": "listLimitErr",
+    "args": ["3"],
+    "test_input": "a\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21",
+    "expected_output": "",
+    "expected_return_code": -22
+  },
+  {
+    "name": "containsEvenNumberOfLinesNoErr",
+    "args": ["3"],
+    "test_input": "d\n33\ng\n43",
+    "expected_output": "d, 33\ng, 43\n"
+  },
+  {
+    "name": "containsEvenNumberOfLinesErr",
+    "args": ["3"],
+    "test_input": "d\n33\ng",
+    "expected_output": "",
+    "expected_return_code": -23
+  },
+  {
+    "name": "hasEmptyLineErr",
+    "args": ["3"],
+    "test_input": "d\n33\n\n43",
+    "expected_output": "",
+    "expected_return_code": -24
+  },
+  {
+    "name": "hasNotOnlyASCCIICharsErr",
+    "args": ["3"],
+    "test_input": "d\n33\něščřžýáíé\n43",
+    "expected_output": "",
+    "expected_return_code": -25
   }
 ]
