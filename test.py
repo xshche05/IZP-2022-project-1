@@ -39,7 +39,7 @@ class Test:
 
     def check_result(self) -> bool:
         result = self.run()
-        return_code = np.uint32(result.returncode).view("int32")
+        return_code = np.uint32(result.returncode).view("int8")
         if return_code != 0 and return_code in [sig.as_integer_ratio()[0] for sig in signal.valid_signals()]:
             print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed with return code {return_code}{bcolors.ENDC}')
             print(f'{bcolors.WARNING}Stderr:\n{result.stderr}{bcolors.ENDC}')
