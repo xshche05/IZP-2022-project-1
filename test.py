@@ -20,11 +20,11 @@ class bcolors:
 
 def run_test(test_name: str, app_name: str, args: List[str], stdin: str, stdout: str):
     p = run([app_name] + args, input=stdin, encoding='ascii', stdout=PIPE, stderr=PIPE)
-    print(f'{bcolors.HEADER}Running test {test_name}')
+    print(f'{bcolors.HEADER}Running test {bcolors.BOLD}{test_name}{bcolors.ENDC}')
     if p.stdout.lower()[:-1] == stdout.lower():
-        print(f'{bcolors.OKGREEN}[OK] {test_name}{bcolors.ENDC}')
+        print(f'{bcolors.OKGREEN}[OK] {bcolors.BOLD}{test_name}{bcolors.ENDC}')
     else:
-        print(f'{bcolors.FAIL}[FAIL] {test_name}{bcolors.ENDC}')
+        print(f'{bcolors.FAIL}[FAIL] {bcolors.BOLD}{test_name}{bcolors.ENDC}')
         print(f'Stderr:\n {p.stderr}')
 
 
