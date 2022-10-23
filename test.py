@@ -7,21 +7,28 @@ from typing import Dict, List, Tuple
 with open('tests.json') as f:
     data = json.load(f)
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 def run_test(test_name: str, app_name: str, args: List[str], stdin: str, stdout: str):
     p = run([app_name] + args, input=stdin, encoding='ascii', stdout=PIPE, stderr=PIPE)
-    print(f'Running test {test_name}')
+    print(f'{bcolors.HEADER}Running test {test_name}')
     if p.stdout.lower()[:-1] == stdout.lower():
-        print(f'[OK] {test_name}')
+        print(f'{bcolors.OKGREEN}[OK] {test_name}{bcolors.ENDC}')
     else:
-        print(f'[FAIL] {test_name}')
+        print(f'{bcolors.FAIL}[FAIL] {test_name}{bcolors.ENDC}')
         print(f'Stderr:\n {p.stderr}')
 
 
 if __name__ == '__main__':
-    # str = "a"*50
-    # print(str)
-    # print(len("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
     tests = data['tests']
     for test_cat in tests:
         cat_tests = tests[test_cat]
