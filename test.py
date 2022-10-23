@@ -4,7 +4,9 @@ from subprocess import CompletedProcess, run, PIPE
 from time import sleep
 from typing import Dict, List, Tuple
 
-with open('tests.json') as f:
+APP_NAME = "t9search"
+
+with open('_tests.json') as f:
     data = json.load(f)
 
 class bcolors:
@@ -18,29 +20,48 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def run_test(test_name: str, app_name: str, args: List[str], stdin: str, stdout: str):
-    p = run([app_name] + args, input=stdin, encoding='ascii', stdout=PIPE, stderr=PIPE)
-    print(f'{bcolors.HEADER}Running test {test_name}:')
-    if p.stdout.lower()[:-1] == stdout.lower():
-        print(f'{bcolors.OKGREEN}[OK] {bcolors.ENDC}')
-    else:
-        print(f'{bcolors.FAIL}[FAIL] Erors: {bcolors.ENDC}')
-        print(f'Stderr:\n {p.stderr}')
-        print('----------------------------------------')
+class Test:
+    def __init__(self, app_name: str, name: str, args: List[str], test_input: str, expected_output: str, timeout: int = 10, expected_return_code: int = 0):
+        self.name = name
+        self.command = f'./{app_name}'
+        self.args = args
+        self.input = test_input
+        self.expected = expected_output
+        self.expected_code = expected_return_code
+        self.timeout = timeout
+
+    def run(self) -> CompletedProcess:
+        result = run([self.command, *self.args], stdout=PIPE, stderr=PIPE, timeout=self.timeout, input=self.input)
+        return result
+
+    def check_result(self) -> bool:
+        result = self.run()
+        if result.returncode != 0:
+            print(f'{bcolors.FAIL}Test {self.name} failed with return code {result.returncode}{bcolors.ENDC}')
+            print(f'Stderr:\n {bcolors.WARNING}{result.stderr.decode()}{bcolors.ENDC}')
+            return False
+        elif result.returncode == self.expected_code:
+            if result.stdout.decode() == self.expected:
+                print(f'{bcolors.OKGREEN}Test {self.name} passed{bcolors.ENDC}')
+                return True
+            else:
+                print(f'{bcolors.FAIL}Test {self.name} failed, expected output {self.expected}, got {result.stdout.decode()}{bcolors.ENDC}')
+                return False
+        else:
+            if result.stdout.decode() == self.expected:
+                print(f'{bcolors.OKGREEN}Test {self.name} passed{bcolors.ENDC}')
+                return True
+            else:
+                print(f'{bcolors.FAIL}Test {self.name} failed{bcolors.ENDC}')
+                print(f'Expected:\n {bcolors.WARNING}{self.expected}{bcolors.ENDC}')
+                print(f'Got:\n {bcolors.WARNING}{result.stdout.decode()}{bcolors.ENDC}')
+                return False
+
+
+tests = [Test(APP_NAME, **test) for test in data]
 
 
 if __name__ == '__main__':
-    tests = data['tests']
-    for test_cat in tests:
-        cat_tests = tests[test_cat]
-        stdin = cat_tests['stdin']
-        cat_tests_tests = cat_tests['tests']
-        for test_i in cat_tests_tests:
-            test = cat_tests_tests[test_i]
-            args = test['args']
-            stdout = test['stdout']
-            code = test['code']
-            s = " ".join(args)
-            run_test(f'{test_i}', './t9search', args, stdin, stdout)
+
 
 

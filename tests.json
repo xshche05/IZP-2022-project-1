@@ -1,92 +1,32 @@
-{
-  "tests": {
-    "baseTests": {
-      "stdin": "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120",
-      "tests": {
-        "test1": {
-          "args": [""],
-          "stdout": "petr dvorak, 603123456\njana novotna, 777987654\nbedrich smetana ml., 541141120",
-          "code": 0
-        },
-        "test2": {
-          "args": ["12"],
-          "stdout": "petr dvorak, 603123456\nbedrich smetana ml., 541141120",
-          "code": 0
-        },
-        "test3": {
-          "args": ["686"],
-          "stdout": "jana novotna, 777987654",
-          "code": 0
-        },
-        "test4": {
-          "args": ["38"],
-          "stdout": "petr dvorak, 603123456\nbedrich smetana ml., 541141120",
-          "code": 0
-        },
-        "test5": {
-          "args": ["111"],
-          "stdout": "Not found",
-          "code": 0
-        }
-      }
-    },
-    "group1": {
-      "stdin": "ABCxxABDxxABDxxABDG\n+420123456789",
-      "tests": {
-        "test1_1": {
-          "args": ["2232234"],
-          "stdout": "Not found",
-          "code": 0
-        },
-        "test1_2": {
-          "args": ["-s", "2232234"],
-          "stdout": "abcxxabdxxabdxxabdg, +420123456789",
-          "code": 0
-        },
-        "test2_1": {
-          "args": ["223"],
-          "stdout": "abcxxabdxxabdxxabdg, +420123456789",
-          "code": 0
-        },
-        "test2_2": {
-          "args": ["-s", "223"],
-          "stdout": "abcxxabdxxabdxxabdg, +420123456789",
-          "code": 0
-        },
-        "test3_1": {
-          "args": ["22224"],
-          "stdout": "Not found",
-          "code": 0
-        },
-        "test3_2": {
-          "args": ["-s", "22224"],
-          "stdout": "Not found",
-          "code": 0
-        },
-        "test4_1": {
-          "args": ["2340"],
-          "stdout": "Not found",
-          "code": 0
-        },
-        "test4_2": {
-          "args": ["-s", "2340"],
-          "stdout": "Not found",
-          "code": 0
-        }
-      }
-    },
-    "groupErrors1": {
-      "stdin": "fhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\n",
-      "tests": {
-        "test_not_even_num_lines": {
-          "args": ["1"],
-          "stdout": "",
-          "code": -23
-        },
-        "test_too_long": {
-
-        }
-      }
-    }
+[
+  {
+    "name": "baseTest1",
+    "args": [""],
+    "test_input": "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120",
+    "expected_output": "Petr Dvorak, 603123456\nJana Novotna, 777987654\nBedrich Smetana ml., 541141120\n"
+  },
+  {
+    "name": "baseTest2",
+    "args": ["12"],
+    "test_input": "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120",
+    "expected_output": "Petr Dvorak, 603123456\nBedrich Smetana ml., 541141120\n"
+  },
+  {
+    "name": "baseTest3",
+    "args": ["686"],
+    "test_input": "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120",
+    "expected_output": "Jana Novotna, 777987654\n"
+  },
+  {
+    "name": "baseTest4",
+    "args": ["38"],
+    "test_input": "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120",
+    "expected_output": "Petr Dvorak, 603123456\nBedrich Smetana ml., 541141120\n"
+  },
+  {
+    "name": "baseTest5",
+    "args": ["111"],
+    "test_input": "Petr Dvorak\n603123456\nJana Novotna\n777987654\nBedrich Smetana ml.\n541141120",
+    "expected_output": "Not found\n"
   }
-}
+]
