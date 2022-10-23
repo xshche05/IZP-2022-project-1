@@ -1,12 +1,15 @@
 import ctypes
 import json
+import sys
 from subprocess import CompletedProcess, run, PIPE
 from time import sleep
 from typing import Dict, List, Tuple
 
-APP_NAME = "t9search"
+is_windows = sys.platform.startswith('win')
 
-with open('_tests.json') as f:
+APP_NAME = f"t9search{'.exe' if is_windows else ''}"
+
+with open('tests.json') as f:
     data = json.load(f)
 
 class bcolors:
@@ -31,30 +34,30 @@ class Test:
         self.timeout = timeout
 
     def run(self) -> CompletedProcess:
-        result = run([self.command, *self.args], stdout=PIPE, stderr=PIPE, timeout=self.timeout, input=self.input)
+        result = run([self.command, *self.args], stdout=PIPE, stderr=PIPE, timeout=self.timeout, input=self.input, encoding='utf-8')
         return result
 
     def check_result(self) -> bool:
         result = self.run()
         if result.returncode != 0:
             print(f'{bcolors.FAIL}Test {self.name} failed with return code {result.returncode}{bcolors.ENDC}')
-            print(f'Stderr:\n {bcolors.WARNING}{result.stderr.decode()}{bcolors.ENDC}')
+            print(f'Stderr:\n {bcolors.WARNING}{result.stderr}{bcolors.ENDC}')
             return False
         elif result.returncode == self.expected_code:
-            if result.stdout.decode() == self.expected:
+            if result.stdout == self.expected:
                 print(f'{bcolors.OKGREEN}Test {self.name} passed{bcolors.ENDC}')
                 return True
             else:
-                print(f'{bcolors.FAIL}Test {self.name} failed, expected output {self.expected}, got {result.stdout.decode()}{bcolors.ENDC}')
+                print(f'{bcolors.FAIL}Test {self.name} failed, expected output {self.expected}, got {result.stdout}{bcolors.ENDC}')
                 return False
         else:
-            if result.stdout.decode() == self.expected:
+            if result.stdout == self.expected:
                 print(f'{bcolors.OKGREEN}Test {self.name} passed{bcolors.ENDC}')
                 return True
             else:
                 print(f'{bcolors.FAIL}Test {self.name} failed{bcolors.ENDC}')
                 print(f'Expected:\n {bcolors.WARNING}{self.expected}{bcolors.ENDC}')
-                print(f'Got:\n {bcolors.WARNING}{result.stdout.decode()}{bcolors.ENDC}')
+                print(f'Got:\n {bcolors.WARNING}{result.stdout}{bcolors.ENDC}')
                 return False
 
 
