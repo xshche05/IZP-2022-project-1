@@ -8,17 +8,14 @@ with open('tests.json') as f:
     data = json.load(f)
 
 
-def run_test(app_name: str, args: List[str], stdin: str, stdout: str, code: int):
+def run_test(test_name: str, app_name: str, args: List[str], stdin: str, stdout: str):
     p = run([app_name] + args, input=stdin, encoding='ascii', stdout=PIPE, stderr=PIPE)
+    print(f'Running test {test_name}')
     if p.stdout.lower()[:-1] == stdout.lower():
-        print(f'{p.stdout[:-1]}')
-        print(f'PASSED')
+        print(f'[OK] {test_name}')
     else:
-        print("FAILED")
-
-    print(p.stderr)
-    ret = ctypes.c_int32(p.returncode).value
-    print(ret - 256)
+        print(f'[FAIL] {test_name}')
+        print(f'Stderr:\n {p.stderr}')
 
 
 if __name__ == '__main__':
@@ -36,6 +33,6 @@ if __name__ == '__main__':
             stdout = test['stdout']
             code = test['code']
             s = " ".join(args)
-            run_test('./t9search', args, stdin, stdout, code)
+            run_test(f'{test_i}', './t9search', args, stdin, stdout)
 
 
