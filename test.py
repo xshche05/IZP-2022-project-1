@@ -62,6 +62,7 @@ tests = [Test(APP_NAME, **test) for test in data]
 
 
 if __name__ == '__main__':
-
+    for test in tests:
+        test.check_result()
 
 
