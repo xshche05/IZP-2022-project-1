@@ -65,12 +65,9 @@ class Test:
                 return False
 
 
-tests = [Test(APP_NAME, **test) for test in data]
-
-
 if __name__ == '__main__':
     APP_NAME = sys.argv[1] if len(sys.argv) > 1 else APP_NAME
-    print(APP_NAME)
+    tests = [Test(APP_NAME, **test) for test in data]
     for test in tests:
         test.check_result()
 
