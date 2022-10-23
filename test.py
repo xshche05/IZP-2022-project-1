@@ -42,13 +42,13 @@ class Test:
     def check_result(self) -> bool:
         result = self.run()
         return_code = np.uint32(result.returncode).view("int32")
-        if return_code != 0:
+        if return_code != 0 and return_code in [sig.as_integer_ratio()[0] for sig in signal.valid_signals()]:
             print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed with return code {return_code}{bcolors.ENDC}')
             print(f'{bcolors.WARNING}Stderr:\n{result.stderr}{bcolors.ENDC}')
             return False
-        elif return_code == self.expected_code:
+        elif self.expected_code != 0:
             if result.stdout == self.expected:
-                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Passed{bcolors.ENDC}')
+                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Error handling passed, code ({return_code}){bcolors.ENDC}\n')
                 return True
             else:
                 print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}')
