@@ -41,6 +41,7 @@ class Test:
 
     def check_result(self) -> bool:
         result = self.run()
+        print(result.returncode)
         try:
             return_code = np.uint8(result.returncode).view("int8")
         except OverflowError:
