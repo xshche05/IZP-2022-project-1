@@ -46,19 +46,19 @@ class Test:
         except OverflowError:
             return_code = np.uint32(result.returncode).view("int32")
         if return_code != 0 and return_code in [-sig.as_integer_ratio()[0] for sig in signal.valid_signals()]:
-            print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] CRUSHED with return code {return_code}{bcolors.ENDC}')
+            print(f'{bcolors.HEADER}Test {self.name}:\n{bcolors.FAIL}[FAIL] CRUSHED with return code {return_code}{bcolors.ENDC}')
             print(f'{bcolors.WARNING}SIGNAL: {signal.Signals(-return_code).name}{bcolors.ENDC}\n')
         elif self.expected_code != 0:
             if result.stdout == self.expected:
-                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Error handling passed, code ({return_code}){bcolors.ENDC}\n'
+                print(f'{bcolors.HEADER}Test {self.name}:\n{bcolors.OKGREEN}[OK] Error handling passed, code ({return_code}){bcolors.ENDC}\n'
                       f'{bcolors.OKCYAN}Possible code is {self.expected_code}{bcolors.ENDC}\n')
             else:
-                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}\n')
+                print(f'{bcolors.HEADER}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}\n')
         else:
             if result.stdout == self.expected:
-                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Passed{bcolors.ENDC}\n')
+                print(f'{bcolors.HEADER}Test {self.name}:\n{bcolors.OKGREEN}[OK] Passed{bcolors.ENDC}\n')
             else:
-                print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}\n')
+                print(f'{bcolors.HEADER}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}\n')
 
 
 if __name__ == '__main__':
