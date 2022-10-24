@@ -8,11 +8,14 @@
 #define CASE_CHANGE_NUM             32                  // Konstanta pro zmenu velikosti pismen
 #define LETTER_TO_NUM               97                  // Konstanta pro prevod pismen na jich poradi v abecede
 #define MAX_ARGUMENTS               3                   // Maximalni pocet argumentu
-#define ERROR_CODE_MOVE             (-100)                   // Minimalni pocet argumentu
+#define ERROR_CODE_MOVE             0                   // Minimalni pocet argumentu
 
 // Konsolove barvy
 #define ERROR_MESSAGE_COLOR     "\x1b[31m"               // Barva chyboveho hlaseni
 #define COLOR_RESET             "\x1b[0m"                // Reset barvy
+
+// Chybove hlaseni
+#define ERROR_CODE_
 
 // ADV. Settings
 int NUMBER_OF_ERRORS_IN_INPUT = 0;   // MAX Pocet chybnych mezer mezi dvema spravnymi znaky
@@ -49,7 +52,7 @@ int checkContainsOnlyNumbers(char const *str)
     {
         if (str[i] < '0' || str[i] > '9')
         {
-            return -12;
+            return -112;
         }
     }
     return 0;
@@ -60,7 +63,7 @@ int checkInputArgumentsAmount(int argc)
 {
     if (argc > MAX_ARGUMENTS)                                   // Overime pocet argumentu
     {
-        return -11;       // Pokud je vice nez 3, tak je to vice nez muze byt MAXIMALNE
+        return -111;       // Pokud je vice nez 3, tak je to vice nez muze byt MAXIMALNE
     }
     return 0;
 }
@@ -223,11 +226,11 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
             // Overeni jestli je nacteny radek delsi nez MAX_LENGTH, +2 protoze potrebujeme misto pro znak '\n' a '\0',
             // pokud nebude buffer mit '\0', tak radek je delsi
         {
-            return -21;     // Radek je delsi nez MAX_LENGTH
+            return -121;     // Radek je delsi nez MAX_LENGTH
         }
         if (buffer[0] == '\0')
         {
-            return -24;
+            return -124;
         }
         if (flag == 1)  // Nacteny radek je jmeno
         {
@@ -244,11 +247,11 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
     }
     if (fgets(buffer, MAX_LENGTH, stdin) != NULL)        // Overime jestli neni jeste neco v stdin
     {
-        return -22;        // Pokud ano, tak je to spatny pocet kontaktu v filu
+        return -122;        // Pokud ano, tak je to spatny pocet kontaktu v filu
     }
     if (flag == 2)     // Jestli flag je 2 tak nacteni bylo ukonceno nactenim jmena
     {
-        return -23;        // Pokud ano, tak je to spatny pocet radku v filu, musi byt sude
+        return -123;        // Pokud ano, tak je to spatny pocet radku v filu, musi byt sude
     }
     return i;     // Vratime pocet nactenych kontaktu
 }
@@ -268,7 +271,7 @@ int transformElement(char const *inputStr, char *transformedStr)     // Funkce p
         }
         else if (lowerCaseStr[i] < 0)
         {
-            return -25;
+            return -125;
         }
         else  // Pokud neni znak pismeno
         {
@@ -357,10 +360,10 @@ int main(int argc, char *argv[]) {
         argMove++;                            // Preskocime jeden argument
         if (argc == argMove)
         {
-            return error(-13, "You cant use -s without <INPUT_ARGUMENT>");
+            return error(-113, "You cant use -s without <INPUT_ARGUMENT>");
         }
     }
-    if (argc-1 != argMove) return error(-14, "You have wrong order of arguments"); // argc - 1 protoze musime overit kolokost optional argumentu
+    if (argc-1 != argMove) return error(-114, "You have wrong order of arguments"); // argc - 1 protoze musime overit kolokost optional argumentu
     checkCode = checkContainsOnlyNumbers(argv[argMove]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
     if (checkCode < 0) return error(checkCode, "Input has to contain only numbers");
     char userInput[MAX_LENGTH + 1];                 // Uzivatelsky vstup

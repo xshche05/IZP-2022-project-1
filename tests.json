@@ -82,35 +82,35 @@
     "args": ["-s", "2340", "extra"],
     "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
     "expected_output": "",
-    "expected_return_code": -11
+    "expected_return_code": -111
   },
   {
     "name": "inputArgHasOnlyNumbers_1",
     "args": ["-s", "2340y"],
     "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
     "expected_output": "",
-    "expected_return_code": -12
+    "expected_return_code": -112
   },
   {
     "name": "inputArgHasOnlyNumbers_2",
     "args": ["2340y"],
     "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
     "expected_output": "",
-    "expected_return_code": -12
+    "expected_return_code": -112
   },
   {
     "name": "CantUseOnly_-s",
     "args": ["-s"],
     "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
     "expected_output": "",
-    "expected_return_code": -13
+    "expected_return_code": -113
   },
   {
     "name": "wrongArgOrder",
     "args": ["2340y", "-s"],
     "test_input": "ABCxxABDxxABDxxABDG\n+420123456789",
     "expected_output": "",
-    "expected_return_code": -14
+    "expected_return_code": -114
   },
   {
     "name": "lineSymLimitNoErr",
@@ -123,7 +123,7 @@
     "args": ["2"],
     "test_input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n+420123456789",
     "expected_output": "",
-    "expected_return_code": -21
+    "expected_return_code": -121
   },
   {
     "name": "listLimitNoErr",
@@ -136,7 +136,7 @@
     "args": ["3"],
     "test_input": "a\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21\na\n21",
     "expected_output": "",
-    "expected_return_code": -22
+    "expected_return_code": -122
   },
   {
     "name": "containsEvenNumberOfLinesNoErr",
@@ -149,20 +149,20 @@
     "args": ["3"],
     "test_input": "d\n33\ng",
     "expected_output": "",
-    "expected_return_code": -23
+    "expected_return_code": -123
   },
   {
     "name": "hasEmptyLineErr",
     "args": ["3"],
     "test_input": "d\n33\n\n43",
     "expected_output": "",
-    "expected_return_code": -24
+    "expected_return_code": -124
   },
   {
     "name": "hasNotOnlyASCCIICharsErr",
     "args": ["3"],
     "test_input": "d\n33\něščřžýáíé\n43",
     "expected_output": "",
-    "expected_return_code": -25
+    "expected_return_code": -125
   }
 ]
