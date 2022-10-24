@@ -39,7 +39,7 @@ class Test:
         result = run([self.command, *self.args], stdout=PIPE, stderr=PIPE, timeout=self.timeout, input=self.input, encoding='utf-8')
         return result
 
-    def check_result(self) -> bool:
+    def check_result(self):
         result = self.run()
         try:
             return_code = np.uint8(result.returncode).view("int8")
@@ -47,22 +47,17 @@ class Test:
             return_code = np.uint32(result.returncode).view("int32")
         if return_code != 0 and return_code in [-sig.as_integer_ratio()[0] for sig in signal.valid_signals()]:
             print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] CRUSHED with return code {return_code}{bcolors.ENDC}')
-            print(f'SIGNAL: {signal.Signals(-return_code).name}')
-            return False
+            print(f'{bcolors.WARNING}SIGNAL: {signal.Signals(-return_code).name}{bcolors.ENDC}\n')
         elif self.expected_code != 0:
             if result.stdout == self.expected:
                 print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Error handling passed, code ({return_code}){bcolors.ENDC}\n')
-                return True
             else:
                 print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}\n')
-                return False
         else:
             if result.stdout == self.expected:
                 print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.OKGREEN}[OK] Passed{bcolors.ENDC}\n')
-                return True
             else:
                 print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}\n')
-                return False
 
 
 if __name__ == '__main__':
