@@ -8,7 +8,7 @@
 #define CASE_CHANGE_NUM             32                  // Konstanta pro zmenu velikosti pismen
 #define LETTER_TO_NUM               97                  // Konstanta pro prevod pismen na jich poradi v abecede
 #define MAX_ARGUMENTS               3                   // Maximalni pocet argumentu
-#define ERROR_CODE_MOVE             (-600)                   // Minimalni pocet argumentu
+#define ERROR_CODE_MOVE             (-100)                   // Minimalni pocet argumentu
 
 // Konsolove barvy
 #define ERROR_MESSAGE_COLOR     "\x1b[31m"               // Barva chyboveho hlaseni
