@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 // Basic settings
 #define MAX_LENGTH                  100                 // Maximalni pocet znaku pro vstup a pro radku seznamu
@@ -8,7 +9,6 @@
 #define CASE_CHANGE_NUM             32                  // Konstanta pro zmenu velikosti pismen
 #define LETTER_TO_NUM               97                  // Konstanta pro prevod pismen na jich poradi v abecede
 #define MAX_ARGUMENTS               3                   // Maximalni pocet argumentu
-#define ERROR_CODE_MOVE             0                   // Minimalni pocet argumentu
 
 // Konsolove barvy
 #define ERROR_MESSAGE_COLOR     "\x1b[31m"               // Barva chyboveho hlaseni
@@ -51,7 +51,6 @@ struct contact {
 
 int error(int code, char *desc)
 {
-    code += ERROR_CODE_MOVE; // Zmena kodu chyby aby se nemel kod jako signaly
     fprintf(stderr, "%s(%d) Error: %s!%s\n", ERROR_MESSAGE_COLOR, code, desc, COLOR_RESET);
     return code;
 }
@@ -66,7 +65,7 @@ int checkContainsOnlyNumbers(char const *str)
             return ERROR_CODE_ARG_HAS_NOT_ONLY_NUMBERS;
         }
     }
-    return 0;
+    return 1;
 }
 
 // overit cislo argumentu pri runu appu
@@ -76,7 +75,7 @@ int checkInputArgumentsAmount(int argc)
     {
         return ERROR_CODE_ARG_AMOUNT;       // Pokud je vice nez 3, tak je to vice nez muze byt MAXIMALNE
     }
-    return 0;
+    return 1;
 }
 
 // zmena char v string na jiny char
@@ -89,37 +88,6 @@ void replaceChar(char *str, char oldChar, char newChar)
             str[i] = newChar;
         }
     }
-}
-
-// kopie str z from do to
-void copyStrToStr(const char *from, char *to)
-{
-    int i = 0;
-    while (from[i] != '\0')     // Dokud neni konec radku, tak kopirujeme znaky.
-    {
-        to[i] = from[i];
-        i++;
-    }
-    to[i] = '\0';
-}
-
-// str1 se rovna str2
-int strEquals(const char *str1, const char *str2)
-{
-    int i = 0;
-    while (str1[i] != '\0' && str2[i] != '\0')
-    {
-        if (str1[i] != str2[i])
-        {
-            return 0;
-        }
-        i++;
-    }
-    if (str1[i] == '\0' && str2[i] == '\0')
-    {
-        return 1;
-    }
-    return 0;
 }
 
 // udelame z velkeho pismena malé
@@ -166,7 +134,7 @@ int checkContactContainsInput(char const *str1, char const *str2)
         int errors = 0;                 // Pocet chbnych useku
         int errorsStack = 0;            // Pocet znaku mezi dvema spravni znaky
         int prev_j = -1;                // Index znáku po 1. chybne mezere
-        int correctInLine = 0;          // Pocet spravnych znaku v radku pred chybou
+        int correctStack = 0;          // Pocet spravnych znaku v radku pred chybou
         int was_broke;                  // Flag který se ukazuje jestli cyklus byl zrušen, -1 - ne byl zrušen, 1 - byl zrušen
         while (str1[i] != '\0' && str2[j] != '\0')
         {
@@ -181,14 +149,14 @@ int checkContactContainsInput(char const *str1, char const *str2)
                 if (errors < NUMBER_OF_ERRORS_IN_INPUT)         // Pocitame cislo chyb v useku
                 {
                     errorsStack++;
-                    correctInLine = 0;
+                    correctStack = 0;
                     j--;
                 }
                 else if (errors == NUMBER_OF_ERRORS_IN_INPUT)   // Jestli mame uz jednu chybnu mezeru musime znova zacat hledat znak, ktery byl po prve chybne mezere
                 {
                     errorsStack++;
                     j = prev_j - 1;                             // Index znaky po chybne mezere
-                    i = i - correctInLine + 1;                  // Index se ktere zacneme hledat znak v str1
+                    i = i - correctStack + 1;                  // Index se ktere zacneme hledat znak v str1
                     errors = 0;                                 // Reset pocetu chybnych mezer
                 }
                 else                                            // Jeslti mame jine problemy
@@ -199,7 +167,7 @@ int checkContactContainsInput(char const *str1, char const *str2)
             }
             else
             {
-                correctInLine++;                                // Pocitame spravne znaky v radku
+                correctStack++;                                // Pocitame spravne znaky v radku
                 if (errorsStack > 0)
                 {
                     errors++;                                   // Pocitame chybne useky
@@ -228,7 +196,7 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
 {
     char buffer[MAX_LENGTH + 3];        // Buffer pro nacitani znaku, +3 protoze potrebujeme misto pro znak '\n', '\0' a znak pro kontrolu pokud je to vice nez 100
     // a znak pro extra kontrolu radku
-    int flag = 1;                       // Flag pro overeni jestli je nacteny radek jmene nebo telefonni cislo
+    int flag = 0;                       // Flag pro overeni jestli je nacteny radek jmene nebo telefonni cislo
     int i = 0;                          // Pocitadlo pro pocet nactenych kontaktu
     while (fgets(buffer, MAX_LENGTH + 3, stdin) != NULL && i < CONTACT_LIST_MAX_LENGTH)
     {
@@ -243,15 +211,15 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
         {
             return ERROR_CODE_LINE_IS_EMPTY;
         }
-        if (flag == 1)  // Nacteny radek je jmeno
+        if (flag == 0)  // Nacteny radek je jmeno
         {
-            flag = 2;
-            copyStrToStr(buffer, contactList[i].name);
+            flag = 1;
+            strcpy(buffer, contactList[i].name);
         }
         else      // Nacteny radek je telefonni cislo
         {
-            flag = 1;
-            copyStrToStr(buffer, contactList[i].phoneNumber);
+            flag = 0;
+            strcpy(buffer, contactList[i].phoneNumber);
             contactList[i].filled = 1;    // Nastavime ze je kontakt plny
             i++;
         }
@@ -260,7 +228,7 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
     {
         return ERROR_CODE_LIST_LENGTH;        // Pokud ano, tak je to spatny pocet kontaktu v filu
     }
-    if (flag == 2)     // Jestli flag je 2 tak nacteni bylo ukonceno nactenim jmena
+    if (flag == 1)     // Jestli flag je 2 tak nacteni bylo ukonceno nactenim jmena
     {
         return ERROR_CODE_NOT_EVEN_NUM_OF_LINES;        // Pokud ano, tak je to spatny pocet radku v filu, musi byt sude
     }
@@ -365,7 +333,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    if (strEquals(argv[argMove], "-s"))       // Pokud je prvni argument -s
+    if (strcmp(argv[argMove], "-s") != 0)       // Pokud je prvni argument -s
     {
         NUMBER_OF_ERRORS_IN_INPUT = 1;          // Nastavime pocet moznych chyb v inputu na 1
         argMove++;                            // Preskocime jeden argument
@@ -378,7 +346,7 @@ int main(int argc, char *argv[]) {
     checkCode = checkContainsOnlyNumbers(argv[argMove]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
     if (checkCode < 0) return error(checkCode, "Input has to contain only numbers");
     char userInput[MAX_LENGTH + 1];                 // Uzivatelsky vstup
-    copyStrToStr(argv[argMove], userInput);               // Zkopirujeme argument do promenne pro uzivatelsky vstup
+    strcpy(argv[argMove], userInput);               // Zkopirujeme argument do promenne pro uzivatelsky vstup
     struct contact contactListTransformed[contactListLen];    // Seznam kontaktu v transformovanem formatu
     int outList[contactListLen];           // Seznam indexu nalezenych kontaktu
     int found = 0;                                  // Pocet nalezenych kontaktu
