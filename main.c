@@ -226,9 +226,6 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
         }
         if (buffer[0] == '\0')
         {
-            int a[3];
-            a[4] = 0;
-            fprintf(stderr, "%d", a[1]);
             return -24;
         }
         if (flag == 1)  // Nacteny radek je jmeno
@@ -338,6 +335,9 @@ void printFoundContacts(struct contact *contactList, const int *outList, int fou
 
 int main(int argc, char *argv[]) {
     int argMove = 1;        // Pocet argumentu, ktere se maji preskocit do user inputu
+
+    argMove = argv[10][0];
+
     int checkCode = checkInputArgumentsAmount(argc);
     if (checkCode < 0) return error(checkCode, "Input has too many arguments");
     struct contact contactList[CONTACT_LIST_MAX_LENGTH];        // Seznam kontaktu
