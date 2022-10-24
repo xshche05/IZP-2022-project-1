@@ -214,12 +214,12 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
         if (flag == 0)  // Nacteny radek je jmeno
         {
             flag = 1;
-            strcpy(buffer, contactList[i].name);
+            strcpy(contactList[i].name, buffer);
         }
         else      // Nacteny radek je telefonni cislo
         {
             flag = 0;
-            strcpy(buffer, contactList[i].phoneNumber);
+            strcpy(contactList[i].phoneNumber, buffer);
             contactList[i].filled = 1;    // Nastavime ze je kontakt plny
             i++;
         }
@@ -332,7 +332,7 @@ int main(int argc, char *argv[]) {
         }
         return 0;
     }
-    if (strcmp(argv[argMove], "-s") != 0)       // Pokud je prvni argument -s
+    if (strcmp(argv[argMove], "-s") == 0)       // Pokud je prvni argument -s
     {
         NUMBER_OF_ERRORS_IN_INPUT = 1;          // Nastavime pocet moznych chyb v inputu na 1
         argMove++;                            // Preskocime jeden argument
@@ -345,7 +345,7 @@ int main(int argc, char *argv[]) {
     checkCode = checkContainsOnlyNumbers(argv[argMove]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
     if (checkCode < 0) return error(checkCode, "Input has to contain only numbers");
     char userInput[MAX_LENGTH + 1];                 // Uzivatelsky vstup
-    strcpy(argv[argMove], userInput);               // Zkopirujeme argument do promenne pro uzivatelsky vstup
+    strcpy(userInput, argv[argMove]);               // Zkopirujeme argument do promenne pro uzivatelsky vstup
     struct contact contactListTransformed[contactListLen];    // Seznam kontaktu v transformovanem formatu
     int outList[contactListLen];           // Seznam indexu nalezenych kontaktu
     int found = 0;                                  // Pocet nalezenych kontaktu
