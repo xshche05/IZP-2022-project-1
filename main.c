@@ -228,6 +228,7 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
         {
             int a[3];
             a[4] = 0;
+            printf("%d", a[1]);
             return -24;
         }
         if (flag == 1)  // Nacteny radek je jmeno
