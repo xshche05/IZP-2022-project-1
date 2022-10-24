@@ -41,12 +41,11 @@ class Test:
 
     def check_result(self) -> bool:
         result = self.run()
-        print(result.returncode)
         try:
             return_code = np.uint8(result.returncode).view("int8")
         except OverflowError:
             return_code = np.uint32(result.returncode).view("int32")
-        if return_code != 0 and return_code in [sig.as_integer_ratio()[0] for sig in signal.valid_signals()]:
+        if return_code != 0 and return_code in [-sig.as_integer_ratio()[0] for sig in signal.valid_signals()]:
             print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed with return code {return_code}{bcolors.ENDC}')
             print(f'{bcolors.WARNING}Stderr:\n{result.stderr}{bcolors.ENDC}\n')
             return False
