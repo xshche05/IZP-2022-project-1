@@ -47,7 +47,7 @@ class Test:
             return_code = np.uint32(result.returncode).view("int32")
         if return_code != 0 and return_code in [-sig.as_integer_ratio()[0] for sig in signal.valid_signals()]:
             print(f'{bcolors.OKCYAN}Test {self.name}:\n{bcolors.FAIL}[FAIL] CRUSHED with return code {return_code}{bcolors.ENDC}')
-            print(f'SIGNAL: {signal.Signals(return_code).name}')
+            print(f'SIGNAL: {signal.Signals(-return_code).name}')
             return False
         elif self.expected_code != 0:
             if result.stdout == self.expected:
