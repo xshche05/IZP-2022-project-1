@@ -319,7 +319,7 @@ void printFoundContacts(struct contact *contactList, const int *outList, int fou
 int main(int argc, char *argv[]) {
     int argMove = 1;        // Pocet argumentu, ktere se maji preskocit do user inputu
     int checkCode = checkInputArgumentsAmount(argc);
-    if (checkCode < 0) return error(checkCode, "Input has too many arguments");
+    if (checkCode < 0) return error(checkCode, "Too many arguments");
     struct contact contactList[CONTACT_LIST_MAX_LENGTH];        // Seznam kontaktu
     int contactListLen = readContactList(contactList);         // Nacteme seznam kontaktu a ulozime pocet nactenych kontaktu
     checkCode = contactListLen;
@@ -332,7 +332,6 @@ int main(int argc, char *argv[]) {
         }
         return 0;
     }
-
     if (strcmp(argv[argMove], "-s") != 0)       // Pokud je prvni argument -s
     {
         NUMBER_OF_ERRORS_IN_INPUT = 1;          // Nastavime pocet moznych chyb v inputu na 1

@@ -51,6 +51,7 @@ class Test:
         elif self.expected_code != 0:
             if result.stdout == self.expected:
                 print(f'{bcolors.HEADER}Test {self.name}:\n{bcolors.OKGREEN}[OK] Error handling passed, code ({return_code}){bcolors.ENDC}\n'
+                      f'Stderr:\n{result.stderr}\n'
                       f'{bcolors.OKCYAN}Possible code is {self.expected_code}{bcolors.ENDC}\n')
             else:
                 print(f'{bcolors.HEADER}Test {self.name}:\n{bcolors.FAIL}[FAIL] Failed\n{bcolors.WARNING}Expected output:\n{self.expected}\nGot:\n{result.stdout}{bcolors.ENDC}\n')
