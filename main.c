@@ -16,17 +16,17 @@
 #define COLOR_RESET             "\x1b[0m"                // Reset barvy
 
 // Chybove hlaseni
-#define ERROR_CODE_ARG_AMOUNT                   (-111)
-#define ERROR_CODE_ARG_HAS_NOT_ONLY_NUMBERS     (-112)
-#define ERROR_CODE_S_USAGE                      (-113)
-#define ERROR_CODE_ARG_ORDER                    (-114)
-#define ERROR_CODE_L_USAGE                      (-115)
+#define ERROR_CODE_ARG_AMOUNT                   (-101)
+#define ERROR_CODE_ARG_HAS_NOT_ONLY_NUMBERS     (-102)
+#define ERROR_CODE_S_USAGE                      (-103)
+#define ERROR_CODE_ARG_ORDER                    (-104)
+#define ERROR_CODE_L_USAGE                      (-105)
 
-#define ERROR_CODE_LINE_LENGTH                  (-121)
-#define ERROR_CODE_LIST_LENGTH                  (-122)
-#define ERROR_CODE_NOT_EVEN_NUM_OF_LINES        (-123)
-#define ERROR_CODE_LINE_IS_EMPTY                (-124)
-#define ERROR_CODE_NOT_ONLY_ASCII               (-125)
+#define ERROR_CODE_LINE_LENGTH                  (-111)
+#define ERROR_CODE_LIST_LENGTH                  (-112)
+#define ERROR_CODE_NOT_EVEN_NUM_OF_LINES        (-113)
+#define ERROR_CODE_LINE_IS_EMPTY                (-114)
+#define ERROR_CODE_NOT_ONLY_ASCII               (-115)
 
 
 
@@ -66,6 +66,7 @@ int min(int i, int i1, int i2)
 
 int error(int code, char *desc)
 {
+    code = -code;
     fprintf(stderr, "%s(%d) Error: %s!%s\n", ERROR_MESSAGE_COLOR, code, desc, COLOR_RESET);
     return code;
 }

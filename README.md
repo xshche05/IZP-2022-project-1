@@ -34,23 +34,23 @@
 #### Application has two types of errors:
 
 1. Input arguments errors codes
-> ***(-111)*** - Input arguments amount error. Application got more than one *additional* argument.
+> ***(101)*** - Input arguments amount error. Application got more than one *additional* argument.
 
 
-> ***(-112)*** - Input argument content has other symbols besides numbers, input has to contain only numbers (0-9).
+> ***(102)*** - Input argument content has other symbols besides numbers, input has to contain only numbers (0-9).
 
-> ***(-113)*** - You cant use -s without <INPUT_ARGUMENT>.
+> ***(103)*** - You cant use -s without <INPUT_ARGUMENT>.
 
-> ***(-114)*** - You have wrong order of arguments or you forgot to add <INPUT_ARGUMENT>. See [this](#running-application) for more information.
+> ***(104)*** - You have wrong order of arguments or you forgot to add <INPUT_ARGUMENT>. See [this](#running-application) for more information.
 
-> ***(-115)*** - You have to use -l with L number. 
+> ***(105)*** - You have to use -l with L number. 
 ***
 2. Seznam file errors codes
-> ***(-121)*** - One of the file's line has more symbols than [MAX_LENGTH](https://github.com/xshche05/t9search/blob/86833ec2238c6a4bfbcdc602c28300a8449d9402/main.c#L4).
+> ***(111)*** - One of the file's line has more symbols than [MAX_LENGTH](https://github.com/xshche05/t9search/blob/86833ec2238c6a4bfbcdc602c28300a8449d9402/main.c#L4).
 
-> ***(-122)*** - Seznam file has more (than [CONTACT_LIST_MAX_LENGTH](https://github.com/xshche05/t9search/blob/86833ec2238c6a4bfbcdc602c28300a8449d9402/main.c#L5)) contacts than program can proceed.
+> ***(112)*** - Seznam file has more (than [CONTACT_LIST_MAX_LENGTH](https://github.com/xshche05/t9search/blob/86833ec2238c6a4bfbcdc602c28300a8449d9402/main.c#L5)) contacts than program can proceed.
 
-> ***(-123)*** - Seznam file format error, every contact has to look like **that***, file has to contain even amount of lines.
+> ***(113)*** - Seznam file format error, every contact has to look like **that***, file has to contain even amount of lines.
 >
 > **that***:
 > ```text
@@ -58,7 +58,7 @@
 > 603123456
 > ```
 
-> ***(-124)*** - Seznam file has empty lines, remove all empty lines.
+> ***(114)*** - Seznam file has empty lines, remove all empty lines.
 
-> ***(-125)*** - Data in seznam file has to contain only [ASCII](https://www.asciitable.com/) characters, diacritic isn't allowed.
+> ***(115)*** - Data in seznam file has to contain only [ASCII](https://www.asciitable.com/) characters, diacritic isn't allowed.
 ***
