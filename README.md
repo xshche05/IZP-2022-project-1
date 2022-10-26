@@ -5,17 +5,21 @@
 >
 > How to run an application:
 > ```bash
-> $ ./t9search <-optios> <INPUT_ARGUMENT> <seznam.txt
+> $ ./t9search <options> <INPUT_ARGUMENT> <seznam.txt
 > ```
 > Options:
-> * ***-s*** - program najde i takové kontakty, u který mezi každými dvěma nalezenými znaky může být libovolná posloupnost jiných znaků.
+> * ***-s*** - program najde i takové kontakty, u který mezi každými dvěma nalezenými znaky může být libovolná posloupnost jiných znaků. Pokud použijete tuto volbu, musí být první.
+> 
+> 
+> * ***-l \<L>*** - Pokud zadal uživatel špatný vyhledávací řetězec (spletl se v čísle), program mu nabídne podobné výsledky. Uvažujte následující chyby uživatele: chybná číslice, chybějící číslice, číslice zadaná navíc.
+> L - reprezentuje maximální počet uvažovaných chyb uživatele
 
 ### Basic Testing
 
 >
 > How to test an application:
 > ```bash
-> $ python3 ./test.py t9search
+> $ python3 ./test.py t9search --bonus <1-2>
 > ```
 > Test some output and errors.
 
@@ -31,7 +35,9 @@
 
 > ***(-113)*** - You cant use -s without <INPUT_ARGUMENT>.
 
-> ***(-114)*** - You have wrong order of arguments. See [this](#running-application) for more information.
+> ***(-114)*** - You have wrong order of arguments or you forgot to add <INPUT_ARGUMENT>. See [this](#running-application) for more information.
+
+> ***(-115)*** - You have to use -l with L number. 
 ***
 2. Seznam file errors codes
 > ***(-121)*** - One of the file's line has more symbols than [MAX_LENGTH](https://github.com/xshche05/t9search/blob/86833ec2238c6a4bfbcdc602c28300a8449d9402/main.c#L4).

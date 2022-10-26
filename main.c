@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // Basic settings
 #define MAX_LENGTH                  100                 // Maximalni pocet znaku pro vstup a pro radku seznamu
@@ -8,7 +9,7 @@
 // Kostanty
 #define CASE_CHANGE_NUM             32                  // Konstanta pro zmenu velikosti pismen
 #define LETTER_TO_NUM               97                  // Konstanta pro prevod pismen na jich poradi v abecede
-#define MAX_ARGUMENTS               3                   // Maximalni pocet argumentu
+#define MAX_ARGUMENTS               5                   // Maximalni pocet argumentu
 
 // Konsolove barvy
 #define ERROR_MESSAGE_COLOR     "\x1b[31m"               // Barva chyboveho hlaseni
@@ -19,6 +20,7 @@
 #define ERROR_CODE_ARG_HAS_NOT_ONLY_NUMBERS     (-112)
 #define ERROR_CODE_S_USAGE                      (-113)
 #define ERROR_CODE_ARG_ORDER                    (-114)
+#define ERROR_CODE_L_USAGE                      (-115)
 
 #define ERROR_CODE_LINE_LENGTH                  (-121)
 #define ERROR_CODE_LIST_LENGTH                  (-122)
@@ -28,8 +30,11 @@
 
 
 
+
 // ADV. Settings
-int NUMBER_OF_ERRORS_IN_INPUT = 0;   // MAX Pocet chybnych mezer mezi dvema spravnymi znaky
+int ERRORS_IN_INPUT = 0;   // MAX Pocet chybnych mezer mezi dvema spravnymi znaky
+int LEVINSTEIN_DISTANCE_CHECK = 0; // MAX Pocet povolenych chybnych znaku
+int LEVINSTEIN_DISTANCE = 0;
 
 char const transformer[27] = "22233344455566677778889999";    // Transformacni pole, pro prevod pismen na cisla
 // "22233344455566677778889999"
@@ -48,6 +53,16 @@ struct contact {
     char phoneNumber[MAX_LENGTH + 1];
 };
 
+
+int min(int i, int i1, int i2)
+{
+    if (i < i1 && i < i2)
+        return i;
+    else if (i1 < i2)
+        return i1;
+    else
+        return i2;
+}
 
 int error(int code, char *desc)
 {
@@ -125,70 +140,29 @@ int strHasChar(char const *str, char const c, int check_limit)
 // str1 musi jen obsahovat str2 (obsahuje 3. funkcionalitu)
 int checkContactContainsInput(char const *str1, char const *str2)
 {
-    int found;                          // Flag jestli bylo najdeno str2 ve str1, 1 - str2 je ve str1, 0 - ne
-    for (int k = 0; str1[k] != '\0'; k++)
+    int i = 0;
+    int j = 0;
+    for (; str1[i] != '\0'; i++)
     {
-        found = 0;                      // Resetujeme flag
-        int i = k;                      // Index pro prochazeni str1
-        int j = 0;                      // Index pro prochazeni str2
-        int errors = 0;                 // Pocet chbnych useku
-        int errorsStack = 0;            // Pocet znaku mezi dvema spravni znaky
-        int prev_j = -1;                // Index znáku po 1. chybne mezere
-        int correctStack = 0;          // Pocet spravnych znaku v radku pred chybou
-        int was_broke;                  // Flag který se ukazuje jestli cyklus byl zrušen, -1 - ne byl zrušen, 1 - byl zrušen
-        while (str1[i] != '\0' && str2[j] != '\0')
+        if (str1[i] == str2[j])
         {
-            was_broke = -1;             // Resetujeme flag
-            if (str1[i] != str2[j])
-            {
-                if (i == k)                                     // jestli prvni znaky str1 a str2 se nerovna
-                {
-                    was_broke = 1;
-                    break;
-                }
-                if (errors < NUMBER_OF_ERRORS_IN_INPUT)         // Pocitame cislo chyb v useku
-                {
-                    errorsStack++;
-                    correctStack = 0;
-                    j--;
-                }
-                else if (errors == NUMBER_OF_ERRORS_IN_INPUT)   // Jestli mame uz jednu chybnu mezeru musime znova zacat hledat znak, ktery byl po prve chybne mezere
-                {
-                    errorsStack++;
-                    j = prev_j - 1;                             // Index znaky po chybne mezere
-                    i = i - correctStack + 1;                  // Index se ktere zacneme hledat znak v str1
-                    errors = 0;                                 // Reset pocetu chybnych mezer
-                }
-                else                                            // Jeslti mame jine problemy
-                {
-                    was_broke = 1;
-                    break;
-                }
-            }
-            else
-            {
-                correctStack++;                                // Pocitame spravne znaky v radku
-                if (errorsStack > 0)
-                {
-                    errors++;                                   // Pocitame chybne useky
-                    prev_j = j;                                 // Index znaku po skonceni chybne mezery
-                    errorsStack = 0;                            // Reset pocetu chyb v mezere
-                }
-            }
-            i++;
-            j++;
+            j++;            // Pokud se shoduje, tak zvysime index pro str2
         }
-        if (errorsStack != 0)                                   // Jeslti mame chyby po skonceni cyklusu neni str2 ve str1
+        else if (str2[j] == '\0')
         {
-            found = 0;                                          // 0 - neni str2 ve str1
+            return 1;       // Pokud je konec str2, tak je to OK
         }
-        else if (was_broke != 1 && str2[j] == '\0')             // Jeslti nemame chyb, nebyl cyklus zrusen a dosli jsme do posledniho znaku str2
+        else if (!ERRORS_IN_INPUT && j != 0)
         {
-            found = 1;                                          // 1 - je str2 ve str1
-            break;
+            i -= j;        // Zpet na puvodni pozici
+            j = 0;        // Pokud se nezvysil index pro str2, a musime hledat neprerusenu tak zkusime znovu
         }
     }
-    return found;
+    if (str2[j] == '\0')
+    {
+        return 1;
+    }
+    return 0;
 }
 
 // nacist pole kontaktu z stdin
@@ -207,7 +181,7 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
         {
             return ERROR_CODE_LINE_LENGTH;     // Radek je delsi nez MAX_LENGTH
         }
-        if (buffer[0] == '\0')
+        if (buffer[0] == '\0')                 // RAdek je prazdny
         {
             return ERROR_CODE_LINE_IS_EMPTY;
         }
@@ -284,17 +258,88 @@ int transformContactList(struct contact *input, struct contact *output, int cont
     return checkflag;
 }
 
+void substring(char *str, char *subStr, int first_sym, int len){
+    int c = 0;
+    while (c < len) {
+        subStr[c] = str[first_sym+c];
+        c++;
+    }
+    subStr[c] = '\0';
+}
+
+// levenshtein delka pro str1 a str2
+int levenshteinDistance(char *str1, char *str2)    // Funkce pro vypocet Levenshteinovy vzdalenosti
+{
+    int len1 = (int) strlen(str1);
+    int len2 = (int) strlen(str2);
+    int distance[len1 + 1][len2 + 1];   // Matice pro vypocet Levenshteinovy vzdalenosti
+    for (int i = 0; i <= len1; i++)
+    {
+        distance[i][0] = i;
+    }
+    for (int j = 0; j <= len2; j++)
+    {
+        distance[0][j] = j;
+    }
+    for (int i = 1; i <= len1; i++)
+    {
+        for (int j = 1; j <= len2; j++)
+        {
+            int cost = 0;
+            if (str1[i - 1] != str2[j - 1])
+            {
+                cost = 1;
+            }
+            distance[i][j] = min(distance[i - 1][j] + 1, distance[i][j - 1] + 1, distance[i - 1][j - 1] + cost);
+        }
+    }
+    return distance[len1][len2];
+}
+
+// overit jestli ma str1 podretezec ktery je na L distance od zadaneho cisla
+int checkIfSubDifByL(char *str, char *inputNum)
+{
+    char subStr[MAX_LENGTH];
+    int i, j, len = MAX_LENGTH + 1;
+    int lenInputNum = (int) strlen(inputNum);
+    // i - prvni pismeno, j - pocet pismen, len - delka str
+    for(i = 0; i < len; i++) // pro kazdy prvni znak
+    {
+        for(j = 1; j <= len - i; j++) // pro kazdy pocet znaku
+        {
+            if (abs(lenInputNum - j) <= LEVINSTEIN_DISTANCE) // pokud je LEVINSTEIN_DISTANCE <= rozdil delky inputu a substringu jinak nema smysl hledat distanci
+            {
+                substring(str, subStr, i, j); // vytvorime substring
+                if (levenshteinDistance(inputNum, subStr) <= LEVINSTEIN_DISTANCE) // pokud je LEVINSTEIN_DISTANCE <= vzdalenost inputu a substringu
+                {
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 // hledame kontakty
-void checkAllIfContainsInput(struct contact *contactList, char *inputNum, int *output, int *found, int contactListLen)    // Hledame vsechny kontakty ktere obsahuji zadane cislo
+void checkAll(struct contact *contactList, char *inputNum, int *output, int *found, int contactListLen)    // Hledame vsechny kontakty ktere obsahuji zadane cislo
 {
     for(int i = 0; i < contactListLen; i++)
     {
-        if (contactList[i].filled == 1 && (checkContactContainsInput(contactList[i].phoneNumber, inputNum) == 1
-                                           || checkContactContainsInput(contactList[i].name, inputNum) == 1))
-        {
-            output[*found] = i;    // Ulozime index kontaktu
-            (*found)++;      // Zvysime pocet nalezenych kontaktu
-            contactList[i].filled = 2;   // Nastavime flag na 2, kontakt uz byl nalezen
+        if (contactList[i].filled == 1){
+            if ((checkContactContainsInput(contactList[i].phoneNumber, inputNum) == 1 || checkContactContainsInput(contactList[i].name, inputNum) == 1))
+            {
+                output[*found] = i;    // Ulozime index kontaktu
+                (*found)++;      // Zvysime pocet nalezenych kontaktu
+                contactList[i].filled = 2;   // Nastavime flag na 2, kontakt uz byl nalezen
+            }
+            else if (LEVINSTEIN_DISTANCE_CHECK == 1){
+                if (checkIfSubDifByL(contactList[i].phoneNumber, inputNum) == 1 || checkIfSubDifByL(contactList[i].name, inputNum) == 1)
+                {
+                    output[*found] = i;    // Ulozime index kontaktu
+                    (*found)++;      // Zvysime pocet nalezenych kontaktu
+                    contactList[i].filled = 2;   // Nastavime flag na 2, kontakt uz byl nalezen
+                }
+            }
         }
     }
 }
@@ -334,14 +379,28 @@ int main(int argc, char *argv[]) {
     }
     if (strcmp(argv[argMove], "-s") == 0)       // Pokud je prvni argument -s
     {
-        NUMBER_OF_ERRORS_IN_INPUT = 1;          // Nastavime pocet moznych chyb v inputu na 1
+        ERRORS_IN_INPUT = 1;          // Nastavime pocet moznych chyb v inputu na 1
         argMove++;                            // Preskocime jeden argument
         if (argc == argMove)
         {
             return error(ERROR_CODE_S_USAGE, "You cant use -s without <INPUT_ARGUMENT>");
         }
     }
-    if (argc-1 != argMove) return error(ERROR_CODE_ARG_ORDER, "You have wrong order of arguments"); // argc - 1 protoze musime overit kolokost optional argumentu
+    if (strcmp(argv[argMove], "-l") == 0)       // Pokud je prvni argument -f
+    {
+        LEVINSTEIN_DISTANCE_CHECK = 1;
+        argMove++;                            // Preskocime jeden argument
+        if (argc == argMove)
+        {
+            return error(ERROR_CODE_L_USAGE, "You cant use -l without <L>");
+        }
+        else
+        {
+            LEVINSTEIN_DISTANCE = atoi(argv[argMove]);   // Nacteme hodnotu L
+            argMove++;
+        }
+    }
+    if (argc-1 != argMove) return error(ERROR_CODE_ARG_ORDER, "You have wrong order of arguments or dont have <INPUT_ARGUMENT>"); // argc - 1 protoze musime overit kolokost optional argumentu
     checkCode = checkContainsOnlyNumbers(argv[argMove]);        // Overime, ze uzivatelsky vstup obsahuje pouze cislice
     if (checkCode < 0) return error(checkCode, "Input has to contain only numbers");
     char userInput[MAX_LENGTH + 1];                 // Uzivatelsky vstup
@@ -351,7 +410,7 @@ int main(int argc, char *argv[]) {
     int found = 0;                                  // Pocet nalezenych kontaktu
     checkCode = transformContactList(contactList, contactListTransformed, contactListLen);     // Prevod seznamu kontaktu na format pro hledani
     if (checkCode < 0) return error(checkCode, "Data in seznam file has to contain only ASCII characters");
-    checkAllIfContainsInput(contactListTransformed, userInput, outList, &found, contactListLen);      // Hledame vsechny kontakty ktere obsahuji zadane cislo
+    checkAll(contactListTransformed, userInput, outList, &found, contactListLen);      // Hledame vsechny kontakty ktere obsahuji zadane cislo
     printFoundContacts(contactList, outList, found);    // Vypiseme vsechno co jsme nasli
     return 0;
 }
