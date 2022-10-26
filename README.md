@@ -14,14 +14,20 @@
 > * ***-l \<L>*** - Pokud zadal uživatel špatný vyhledávací řetězec (spletl se v čísle), program mu nabídne podobné výsledky. Uvažujte následující chyby uživatele: chybná číslice, chybějící číslice, číslice zadaná navíc.
 > L - reprezentuje maximální počet uvažovaných chyb uživatele
 
-### Basic Testing
+[//]: # (### Basic Testing)
 
->
-> How to test an application:
-> ```bash
-> $ python3 ./test.py t9search --bonus <1-2>
-> ```
-> Test some output and errors.
+[//]: # ()
+[//]: # (>)
+
+[//]: # (> How to test an application:)
+
+[//]: # (> ```bash)
+
+[//]: # (> $ python3 ./test.py t9search --bonus <1-2>)
+
+[//]: # (> ```)
+
+[//]: # (> Test some output and errors.)
 
 ### Errors and codes descriptions
 
