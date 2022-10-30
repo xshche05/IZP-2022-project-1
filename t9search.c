@@ -15,21 +15,21 @@
 #define ERROR_MESSAGE_COLOR     "\x1b[31m"               // Barva chyboveho hlaseni
 #define COLOR_RESET             "\x1b[0m"                // Reset barvy
 
-// Chybove hlaseni, aplikace vrati invertovanu hodnotu error codu
-#define ERROR_CODE_ARG_AMOUNT                   (-101)      // Spatny pocet argumentu, musi to byt maximalne MAX_ARGUMENTS
-#define ERROR_CODE_ARG_HAS_NOT_ONLY_NUMBERS     (-102)      // Hlavni vstupovy argument (cislo pro hledani) neni pouze cislo
-#define ERROR_CODE_DONT_HAVE_IN                 (-103)      // Spatne pouziti programu, -s musi byt prvnim a musi aplikace mit cislo pro hledani argumenty
-#define ERROR_CODE_ARG_ORDER                    (-104)      // Spatne poradi argumentu, -s musi byt prvnim argumentem nebo neni cislo pro hledani
-#define ERROR_CODE_L_USAGE                      (-105)      // Spatne pouziti programu, po -l musi nasledovat L (nezaporne cele cislo)
-#define ERROR_CODE_ARG_LEV                      (-106)      // Spatna hodnota argumentu L, musi byt nezaporne cele cislo
-#define ERROR_CODE_ARG_LENGTH                   (-107)      // Hlavni vstupovy argument (cislo pro hledani) je prilis dlouhy
-#define ERROR_CODE_HAS_UNUSED_ARG               (-108)      // Program ma nezname argumenty
+// Chybove hlaseni
+#define ERROR_CODE_ARG_AMOUNT                   101      // Spatny pocet argumentu, musi to byt maximalne MAX_ARGUMENTS
+#define ERROR_CODE_ARG_HAS_NOT_ONLY_NUMBERS     102      // Hlavni vstupovy argument (cislo pro hledani) neni pouze cislo
+#define ERROR_CODE_DONT_HAVE_IN                 103      // Spatne pouziti programu, -s musi byt prvnim a musi aplikace mit cislo pro hledani argumenty
+#define ERROR_CODE_ARG_ORDER                    104      // Spatne poradi argumentu, -s musi byt prvnim argumentem nebo neni cislo pro hledani
+#define ERROR_CODE_L_USAGE                      105      // Spatne pouziti programu, po -l musi nasledovat L (nezaporne cele cislo)
+#define ERROR_CODE_ARG_LEV                      106      // Spatna hodnota argumentu L, musi byt nezaporne cele cislo
+#define ERROR_CODE_ARG_LENGTH                   107      // Hlavni vstupovy argument (cislo pro hledani) je prilis dlouhy
+#define ERROR_CODE_HAS_UNUSED_ARG               108      // Program ma nezname argumenty
 
-#define ERROR_CODE_LINE_LENGTH                  (-111)      // Chyba v radku seznamu, radka je delsi nez MAX_LENGTH
-#define ERROR_CODE_LIST_LENGTH                  (-112)      // Chyba v seznamu, seznam je delsi nez CONTACT_LIST_MAX_LENGTH
-#define ERROR_CODE_NOT_EVEN_NUM_OF_LINES        (-113)      // Chyba v seznamu, seznam neni sudy pocet radku
-#define ERROR_CODE_LINE_IS_EMPTY                (-114)      // Chyba v seznamu, radka je prazdna
-#define ERROR_CODE_NOT_ONLY_ASCII               (-115)      // Chyba v seznamu, radka obsahuje znak jiny nez ASCII
+#define ERROR_CODE_LINE_LENGTH                  111      // Chyba v radku seznamu, radka je delsi nez MAX_LENGTH
+#define ERROR_CODE_LIST_LENGTH                  112      // Chyba v seznamu, seznam je delsi nez CONTACT_LIST_MAX_LENGTH
+#define ERROR_CODE_NOT_EVEN_NUM_OF_LINES        113      // Chyba v seznamu, seznam neni sudy pocet radku
+#define ERROR_CODE_LINE_IS_EMPTY                114      // Chyba v seznamu, radka je prazdna
+#define ERROR_CODE_NOT_ONLY_ASCII               115      // Chyba v seznamu, radka obsahuje znak jiny nez ASCII
 
 
 
@@ -87,7 +87,6 @@ int min(int a, int b, int c)
  */
 int error(int code, char *desc)
 {
-    code = -code;
     fprintf(stderr, "%s(%d) Error: %s!%s\n", ERROR_MESSAGE_COLOR, code, desc, COLOR_RESET);
     return -code;
 }
@@ -224,7 +223,7 @@ int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
     }
     if (fgets(buffer, MAX_LENGTH, stdin) != NULL)        // Overime jestli neni jeste neco v stdin
     {
-        return error(ERROR_CODE_LIST_LENGTH, "Seznam has mpre contacts than max allowed contact list len");        // Pokud ano, tak je to spatny pocet kontaktu v filu
+        return error(ERROR_CODE_LIST_LENGTH, "Seznam has more contacts than max allowed contact list len");        // Pokud ano, tak je to spatny pocet kontaktu v filu
     }
     if (flag == 1)     // Jestli flag je 2 tak nacteni bylo ukonceno nactenim jmena
     {
