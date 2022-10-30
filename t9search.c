@@ -154,26 +154,6 @@ void toLowerCase(char const *strIn, char *strOut)
 }
 
 /**
- * @brief Funkce pro overeni, jestli ma string znak v prvnich n znacich
- *
- * @param str - String, ve kterem se ma hledat
- * @param c - Hledany znak
- * @param check_limit - Pocet znaku, ve kterych se ma hledat
- * @return 1 - pokud ma string znak v prvnich n znacich, jinak 0
- */
-int strHasChar(char const *str, char const c, int check_limit)
-{
-    for (int i = 0; i < check_limit; i++)
-    {
-        if (str[i] == c)
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-/**
  * @brief Funkce pro overeni, jestli string staci pro zadane argumenty
  * @param string
  * @param inputNum
@@ -214,16 +194,14 @@ int checkContactContainsInput(char const *string, char const *inputNum)
  */
 int readContactList(struct contact *contactList)    // Nacteme seznam kontaktu
 {
-    char buffer[MAX_LENGTH + 3];        // Buffer pro nacitani znaku, +3 protoze potrebujeme misto pro znak '\n', '\0' a znak pro kontrolu pokud je to vice nez 100
+    char buffer[MAX_LENGTH + 2];        // Buffer pro nacitani znaku, +2 protoze potrebujeme misto pro znak '\n', '\0'
     // a znak pro extra kontrolu radku
     int flag = 0;                       // Flag pro overeni jestli je nacteny radek jmene nebo telefonni cislo
     int i = 0;                          // Pocitadlo pro pocet nactenych kontaktu
-    while (fgets(buffer, MAX_LENGTH + 3, stdin) != NULL && i < CONTACT_LIST_MAX_LENGTH)
+    while (fgets(buffer, MAX_LENGTH + 2, stdin) != NULL && i < CONTACT_LIST_MAX_LENGTH)
     {
         replaceChar(buffer, '\n', '\0');    // Nahradime znak '\n' za znak '\0', proto je v seznamu \n je konec radku, ho uz mame
-        if (strHasChar(buffer, '\0', MAX_LENGTH + 1) != 1)
-            // Overeni jestli je nacteny radek delsi nez MAX_LENGTH, +2 protoze potrebujeme misto pro znak '\n' a '\0',
-            // pokud nebude buffer mit '\0', tak radek je delsi
+        if (strlen(buffer) > MAX_LENGTH)
         {
             return error(ERROR_CODE_LINE_LENGTH, "Seznam line is too long");     // Radek je delsi nez MAX_LENGTH
         }
@@ -379,7 +357,8 @@ int levenshteinDistance(char *str1, char *str2)    // Funkce pro vypocet Levensh
 int checkIfSubDifByL(char *str, char *inputNum)
 {
     char subStr[MAX_LENGTH];
-    int i, j, len = MAX_LENGTH + 1;
+    int i, j;
+    int len = MAX_LENGTH + 1;
     int lenInputNum = (int) strlen(inputNum);
     // i - prvni pismeno, j - pocet pismen, len - delka str
     for(i = 0; i < len; i++) // pro kazdy prvni znak
