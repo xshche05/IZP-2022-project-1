@@ -1,3 +1,10 @@
+/**
+ * IZP project 1 (FIT VUT) - 1 semester 2022/2023
+ * Author:  Kirill Shchetiniuk aka Spagetik, aka xshche05
+ * Date:    31.10.2022
+ * Description:  This program is a search engine for the T9 dictionary.
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
